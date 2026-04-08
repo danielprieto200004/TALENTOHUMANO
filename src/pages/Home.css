@@ -1,0 +1,137 @@
+.home-section-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 32px;
+}
+
+.home-section-header .section-title {
+  margin-bottom: 0;
+}
+
+.ver-todas {
+  font-size: 0.83rem;
+  font-weight: 600;
+  color: #003da5;
+  text-decoration: none;
+  transition: color 0.12s;
+}
+
+.ver-todas:hover {
+  color: #00298a;
+}
+
+.home-news-layout {
+  display: grid;
+  grid-template-columns: 1fr 1px 1fr;
+  gap: 0 48px;
+  align-items: start;
+}
+
+.home-news-layout::before {
+  content: '';
+  grid-column: 2;
+  background: #e5e7eb;
+  align-self: stretch;
+}
+
+.home-news-lead {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.home-news-lead-title {
+  margin: 0;
+  font-family: 'Playfair Display', serif;
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: #111827;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+}
+
+.home-news-lead-desc {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #4b5563;
+  line-height: 1.7;
+}
+
+.home-news-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.home-news-item {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  padding: 16px 0;
+  border-bottom: 1px solid #e5e7eb;
+  cursor: default;
+}
+
+.home-news-item:first-child {
+  padding-top: 0;
+}
+
+.home-news-item:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.home-news-item-title {
+  margin: 4px 0 6px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #111827;
+  line-height: 1.4;
+}
+
+.cat-dot {
+  width: 3px;
+  min-height: 52px;
+  border-radius: 2px;
+  flex-shrink: 0;
+  align-self: stretch;
+}
+
+.cat-tag {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+.news-fecha-sm {
+  font-size: 0.74rem;
+  color: #9ca3af;
+}
+
+.empty-msg {
+  color: #9ca3af;
+  font-size: 0.9rem;
+}
+
+.sections-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 14px;
+}
+
+@media (max-width: 680px) {
+  .home-news-layout {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .home-news-layout::before {
+    display: none;
+  }
+
+  .home-news-lead {
+    padding-bottom: 28px;
+    border-bottom: 1px solid #e5e7eb;
+  }
+}

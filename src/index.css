@@ -1,0 +1,11 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: 'Inter', 'Segoe UI', sans-serif;
+  background: #f5f7fa;
+  color: #111827;
+  -webkit-font-smoothing: antialiased;
+}

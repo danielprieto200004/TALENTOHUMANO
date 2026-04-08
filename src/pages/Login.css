@@ -1,0 +1,115 @@
+.login-page {
+  min-height: 100vh;
+  background: #f5f7fa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.login-box {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 40px 36px;
+  width: min(380px, 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.login-logo {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  background: #003da5;
+  color: #fff;
+  font-family: 'Playfair Display', serif;
+  font-size: 1.2rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.login-title {
+  margin: 0 0 8px;
+  font-family: 'Playfair Display', serif;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #111827;
+}
+
+.login-desc {
+  margin: 0 0 24px;
+  font-size: 0.88rem;
+  color: #6b7280;
+  line-height: 1.6;
+}
+
+.login-form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.login-form input {
+  font-family: inherit;
+  font-size: 0.9rem;
+  padding: 10px 14px;
+  border: 1px solid #d1d5db;
+  border-radius: 7px;
+  color: #111827;
+  background: #f9fafb;
+  transition: border-color 0.12s;
+  text-align: center;
+  letter-spacing: 0.1em;
+}
+
+.login-form input:focus {
+  outline: none;
+  border-color: #003da5;
+  background: #fff;
+}
+
+.login-error {
+  margin: 0;
+  font-size: 0.8rem;
+  color: #dc2626;
+  text-align: center;
+}
+
+.login-form button {
+  font-family: inherit;
+  font-size: 0.88rem;
+  font-weight: 600;
+  padding: 10px;
+  border-radius: 7px;
+  border: none;
+  background: #003da5;
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.12s;
+}
+
+.login-form button:hover {
+  background: #00298a;
+}
+
+.login-back {
+  margin-top: 20px;
+  background: none;
+  border: none;
+  font-family: inherit;
+  font-size: 0.82rem;
+  color: #9ca3af;
+  cursor: pointer;
+  transition: color 0.12s;
+}
+
+.login-back:hover {
+  color: #374151;
+}
