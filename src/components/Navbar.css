@@ -24,7 +24,7 @@
   width: 34px;
   height: 34px;
   border-radius: 6px;
-  background: #003da5;
+  background: #000F26;
   color: #fff;
   font-family: 'Playfair Display', serif;
   font-size: 1rem;
@@ -44,7 +44,7 @@
 .brand-name {
   font-size: 0.9rem;
   font-weight: 700;
-  color: #003da5;
+  color: #000F26;
 }
 
 .brand-sub {
@@ -69,12 +69,12 @@
 }
 
 .nav-link:hover {
-  background: #e6ecf8;
-  color: #003da5;
+  background: #E6F3F9;
+  color: #000F26;
 }
 
 .nav-link.active {
-  color: #003da5;
+  color: #000F26;
   font-weight: 600;
 }
 
@@ -114,11 +114,11 @@
 }
 
 .editor-bar {
-  background: #fefce8;
-  border-top: 1px solid #fde68a;
+  background: #FFFAED;
+  border-top: 1px solid #FBBC09;
   padding: 6px 0;
   font-size: 0.78rem;
-  color: #92400e;
+  color: #5C3D00;
   font-weight: 500;
 }
 

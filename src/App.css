@@ -1,10 +1,10 @@
 /* ─── Variables ─────────────────────────────── */
 :root {
-  --blue:       #003da5;
-  --blue-dark:  #00298a;
-  --blue-light: #e6ecf8;
-  --green:      #00a651;
-  --green-dark: #008040;
+  --blue:       #000F26;
+  --blue-dark:  #000A18;
+  --blue-light: #E6F3F9;
+  --green:      #FBBC09;
+  --green-dark: #D4A000;
   --text-1:     #0d1117;
   --text-2:     #374151;
   --text-3:     #9ca3af;
@@ -78,7 +78,7 @@
   right: 120px;
   width: 260px;
   height: 260px;
-  background: rgba(0,166,81,0.13);
+  background: rgba(12,130,178,0.13);
   border-radius: 50%;
   pointer-events: none;
 }

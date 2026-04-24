@@ -21,7 +21,7 @@ const secciones = [
     slug: 'administracion',
     titulo: 'Administración de Personal',
     descripcion: 'Nómina, vacaciones, certificaciones y trámites laborales.',
-    color: '#0891b2',
+    color: '#0C82B2',
   },
 ]
 

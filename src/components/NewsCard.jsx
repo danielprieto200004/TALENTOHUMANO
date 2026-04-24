@@ -2,7 +2,7 @@ import { CATEGORIA_COLOR } from '../data/defaultNews'
 import './NewsCard.css'
 
 export default function NewsCard({ noticia, onEdit, onDelete, isEditor }) {
-  const color = CATEGORIA_COLOR[noticia.categoria] || '#003da5'
+  const color = CATEGORIA_COLOR[noticia.categoria] || '#000F26'
   const fecha = new Date(noticia.fechaPublicacion).toLocaleDateString('es-CO', {
     day: 'numeric',
     month: 'short',

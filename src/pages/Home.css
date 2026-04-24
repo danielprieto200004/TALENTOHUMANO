@@ -12,13 +12,13 @@
 .ver-todas {
   font-size: 0.83rem;
   font-weight: 600;
-  color: #003da5;
+  color: #000F26;
   text-decoration: none;
   transition: color 0.12s;
 }
 
 .ver-todas:hover {
-  color: #00298a;
+  color: #000A18;
 }
 
 .home-news-layout {

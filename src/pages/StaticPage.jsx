@@ -31,7 +31,7 @@ export default function StaticPage({ data, accentColor }) {
         <div className="container static-layout">
           {data.bloques.map((bloque, i) => (
             <div key={bloque.id} className="static-bloque">
-              <div className="static-bloque-num" style={{ color: accentColor }}>
+              <div className="static-bloque-num">
                 {String(i + 1).padStart(2, '0')}
               </div>
               <div className="static-bloque-body">

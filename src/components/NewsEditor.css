@@ -87,7 +87,7 @@
 .field textarea:focus,
 .field select:focus {
   outline: none;
-  border-color: #003da5;
+  border-color: #000F26;
   background: #fff;
 }
 
@@ -119,9 +119,9 @@
 }
 
 .img-upload-btn:hover {
-  border-color: #003da5;
-  color: #003da5;
-  background: #eef2fb;
+  border-color: #000F26;
+  color: #000F26;
+  background: #E6F3F9;
 }
 
 .img-preview {
@@ -199,7 +199,7 @@
 }
 
 .btn-save {
-  background: #003da5;
+  background: #000F26;
   border: none;
   padding: 8px 20px;
   border-radius: 6px;
@@ -212,5 +212,5 @@
 }
 
 .btn-save:hover {
-  background: #00298a;
+  background: #000A18;
 }

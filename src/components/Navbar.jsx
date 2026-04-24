@@ -24,7 +24,7 @@ export default function Navbar() {
             Noticias
           </NavLink>
           <NavLink to="/sst" className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}>
-            SST
+            SG-SSTGA
           </NavLink>
           <NavLink to="/bienestar" className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}>
             Bienestar

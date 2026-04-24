@@ -23,7 +23,7 @@
   width: 44px;
   height: 44px;
   border-radius: 10px;
-  background: #003da5;
+  background: #000F26;
   color: #fff;
   font-family: 'Playfair Display', serif;
   font-size: 1.2rem;
@@ -71,7 +71,7 @@
 
 .login-form input:focus {
   outline: none;
-  border-color: #003da5;
+  border-color: #000F26;
   background: #fff;
 }
 
@@ -89,14 +89,14 @@
   padding: 10px;
   border-radius: 7px;
   border: none;
-  background: #003da5;
+  background: #000F26;
   color: #fff;
   cursor: pointer;
   transition: background 0.12s;
 }
 
 .login-form button:hover {
-  background: #00298a;
+  background: #000A18;
 }
 
 .login-back {

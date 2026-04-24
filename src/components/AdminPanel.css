@@ -58,12 +58,12 @@
 }
 
 .admin-btn-primary {
-  background: #003da5;
+  background: #000F26;
   border: none;
   color: #fff;
   font-weight: 600;
 }
 
 .admin-btn-primary:hover {
-  background: #00298a;
+  background: #000A18;
 }

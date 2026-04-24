@@ -84,7 +84,7 @@
   font-family: inherit;
   font-size: 0.78rem;
   font-weight: 600;
-  color: #003da5;
+  color: #000F26;
   cursor: pointer;
   padding: 0;
   transition: color 0.12s;
@@ -92,7 +92,7 @@
 }
 
 .doc-link:hover {
-  color: #00298a;
+  color: #000A18;
 }
 
 @media (max-width: 600px) {

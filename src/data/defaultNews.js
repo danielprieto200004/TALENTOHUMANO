@@ -76,11 +76,11 @@ export const defaultNews = [
 export const CATEGORIAS = ['General', 'SST', 'Bienestar', 'Capacitación', 'Institucional', 'Beneficios', 'Administración']
 
 export const CATEGORIA_COLOR = {
-  General:       '#003da5',
+  General:       '#000F26',
   SST:           '#dc2626',
   Bienestar:     '#00a651',
-  Capacitación:  '#2563eb',
-  Institucional: '#b45309',
+  Capacitación:  '#0C82B2',
+  Institucional: '#B8860B',
   Beneficios:    '#7c3aed',
-  Administración:'#0891b2',
+  Administración:'#0C82B2',
 }
