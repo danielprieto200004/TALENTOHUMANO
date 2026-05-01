@@ -44,7 +44,7 @@ function ItemsList({ items }) {
     <ul className="ti-items-list">
       {items.map((item, i) => (
         <li key={i} className="ti-item">
-          <span className="ti-item-dot" style={{ background: ACCENT }} />
+          <span className="ti-item-dot" />
           {item}
         </li>
       ))}
@@ -88,7 +88,6 @@ function ExternalBtn({ href, children }) {
       target="_blank"
       rel="noopener noreferrer"
       className="instructivo-btn"
-      style={{ background: '#000F26' }}
     >
       {children} →
     </a>
@@ -145,11 +144,11 @@ function SecContacto({ bloque }) {
       <div className="ti-contact-grid">
         {contacts.map((c) => (
           <div key={c.correo} className="ti-contact-card">
-            <div className="ti-contact-avatar" style={{ background: '#000F2615', color: '#000F26' }}>
+            <div className="ti-contact-avatar">
               {c.nombre.trim()[0]}
             </div>
             <p className="ti-contact-name">{c.nombre.trim()}</p>
-            <a href={`mailto:${c.correo}`} className="ti-contact-email" style={{ color: '#000F26' }}>
+            <a href={`mailto:${c.correo}`} className="ti-contact-email">
               {c.correo}
             </a>
           </div>
@@ -174,11 +173,11 @@ function SecPerfil({ bloqueInvitation, bloqueVideo }) {
         </Callout>
       )}
       {bloqueInvitation.maxim && (
-        <blockquote className="ti-maxim" style={{ borderLeftColor: ACCENT }}>
+        <blockquote className="ti-maxim">
           {bloqueInvitation.maxim}
         </blockquote>
       )}
-      <p className="ti-section-intro" style={{ marginTop: '32px' }}>{bloqueVideo.titulo}</p>
+      <p className="ti-section-intro">{bloqueVideo.titulo}</p>
       <VideoEmbed url={bloqueVideo.fuentevideo} title="Cómo actualizar tu perfil en Talentos Innovadores" />
     </SectionAnchor>
   )
@@ -206,7 +205,7 @@ function SecCesantias({ bloquevideo, bloqueInstructivo }) {
       <div className="ti-cesantias-pair">
         {cesantiasData.map((item, i) => (
           <div key={i} className="ti-cesantias-card">
-            <h3 className="ti-cesantias-card-title" style={{ color: '#000F26' }}>{item.titulo}</h3>
+            <h3 className="ti-cesantias-card-title">{item.titulo}</h3>
             <PdfEmbed src={item.pdf} title={item.titulo} />
             <div className="instructivo-actions">
               <ExternalBtn href={item.fuente}>Abrir documento original</ExternalBtn>
@@ -228,7 +227,6 @@ function InstructivoNav({ activeId, onNav }) {
           <li key={sec.id}>
             <button
               className={`ti-nav-btn${activeId === sec.id ? ' ti-nav-btn--active' : ''}`}
-              style={activeId === sec.id ? { color: '#000F26', borderLeftColor: ACCENT } : {}}
               onClick={() => onNav(sec.id)}
             >
               {sec.label}
@@ -248,7 +246,6 @@ function InstructivoPills({ activeId, onNav }) {
           <button
             key={sec.id}
             className={`ti-pill${activeId === sec.id ? ' ti-pill--active' : ''}`}
-            style={activeId === sec.id ? { background: '#000F26', borderColor: '#000F26' } : {}}
             onClick={() => onNav(sec.id)}
           >
             {sec.label}
@@ -288,12 +285,12 @@ function InstructivoTab({ data }) {
   const b = Object.fromEntries(data.bloques.map(b => [b.id, b]))
 
   return (
-    <main>
-      <div className="page-header" style={{ borderBottom: `3px solid ${ACCENT}` }}>
-        <div className="container">
-          <h1 className="page-title">{data.titulo}</h1>
-          <p className="page-desc">{data.descripcion}</p>
-        </div>
+    <main className="news-page">
+      <div className="container">
+        <header className="news-header">
+          <h1 className="news-title">{data.titulo}</h1>
+          <p className="news-desc">{data.descripcion}</p>
+        </header>
       </div>
 
       {/* Mobile pill nav */}
@@ -343,7 +340,6 @@ export default function AdministracionPersonal() {
             <button
               key={tab.id}
               className={`subtab-btn${active === tab.id ? ' subtab-btn--active' : ''}`}
-              style={active === tab.id ? { borderBottomColor: ACCENT, color: '#000F26' } : {}}
               onClick={() => setActive(tab.id)}
             >
               {tab.label}

@@ -18,7 +18,7 @@ import salidasVideoImg        from '../assets/img/salidas-a-campo-video.png'
 
 import './SST.css'
 
-const ACCENT = '#dc2626'
+const ACCENT = '#0C82B2'
 
 // ── PDF resolver ──────────────────────────────────────────────────────────────
 const pdfModules = import.meta.glob('../assets/pdf/*.pdf', { eager: true, query: '?url', import: 'default' })
@@ -97,13 +97,8 @@ function ProfText({ children }) {
 }
 
 function ProfCallout({ children, type = 'info' }) {
-  const styles = {
-    info:    { background: '#f9fafb', borderColor: ACCENT, color: '#374151' },
-    warning: { background: '#fffbeb', borderColor: '#f59e0b', color: '#78350f' },
-    green:   { background: '#f0fdf4', borderColor: '#00a651', color: '#14532d' },
-  }
   return (
-    <div className="prof-callout" style={styles[type]}>
+    <div className={`prof-callout prof-callout--${type}`}>
       {children}
     </div>
   )
@@ -111,7 +106,7 @@ function ProfCallout({ children, type = 'info' }) {
 
 function ProfMaxim({ children }) {
   return (
-    <p className="prof-maxim" style={{ borderLeftColor: ACCENT, color: '#374151' }}>
+    <p className="prof-maxim">
       {children}
     </p>
   )
@@ -130,7 +125,7 @@ function ProfItemsList({ items }) {
     <ul className="prof-items-list">
       {items.map((item, i) => (
         <li key={i} className="prof-item">
-          <span className="prof-item-dot" style={{ background: ACCENT }} />
+          <span className="prof-item-dot" />
           {item}
         </li>
       ))}
@@ -149,8 +144,7 @@ function ProfPdf({ src, title }) {
 
 function ProfBtn({ href, children }) {
   return (
-    <a href={href} target="_blank" rel="noopener noreferrer"
-       className="prof-btn" style={{ background: '#000F26' }}>
+    <a href={href} target="_blank" rel="noopener noreferrer" className="prof-btn">
       {children} →
     </a>
   )
@@ -226,13 +220,11 @@ function SecContacto({ b }) {
       <div className="prof-contact-grid">
         {contacts.map((c) => (
           <div key={c.correo} className="prof-contact-card">
-            <div className="prof-contact-avatar"
-                 style={{ background: '#000F2615', color: '#000F26' }}>
+            <div className="prof-contact-avatar">
               {c.correo[0].toUpperCase()}
             </div>
             <p className="prof-contact-rol">{c.rol}</p>
-            <a href={`mailto:${c.correo}`} className="prof-contact-email"
-               style={{ color: '#000F26' }}>
+            <a href={`mailto:${c.correo}`} className="prof-contact-email">
               {c.correo}
             </a>
           </div>
@@ -251,8 +243,10 @@ function SecEmergencias({ bGest, bInv, bEncuentro }) {
 
       {/* Agradecimiento brigadistas */}
       <div className="prof-subsection">
-        <ProfSubtitle>{bGest.subtitulo[0]}</ProfSubtitle>
-        <ProfText>{bGest.texto[0]}</ProfText>
+        <ProfMaxim>
+          <b>{bGest.subtitulo[0]}</b>
+          {bGest.texto[0]}
+        </ProfMaxim>
         <ProfSubtitle>{bGest.subtitulo[1]}</ProfSubtitle>
         <ProfText>{bGest.texto[1]}</ProfText>
         <ProfBanner src={gestEmergenciasImg} alt="Gestión de emergencias" />
@@ -428,7 +422,7 @@ function SecSalidas({ b }) {
         <div className="prof-video-thumb">
           <img src={salidasVideoImg} alt="Video decálogo de autocuidado" className="prof-video-thumb-img" />
           <a href={b.fuentedos} target="_blank" rel="noopener noreferrer"
-             className="prof-video-play-btn" style={{ background: '#000F26' }}>
+             className="prof-video-play-btn">
             Ver video
           </a>
         </div>
@@ -466,7 +460,6 @@ function ProfNav({ activeId, onNav }) {
           <li key={sec.id}>
             <button
               className={`prof-nav-btn${activeId === sec.id ? ' prof-nav-btn--active' : ''}`}
-              style={activeId === sec.id ? { color: '#000F26', borderLeftColor: ACCENT } : {}}
               onClick={() => onNav(sec.id)}
             >
               {sec.label}
@@ -486,7 +479,6 @@ function ProfPills({ activeId, onNav }) {
           <button
             key={sec.id}
             className={`prof-pill${activeId === sec.id ? ' prof-pill--active' : ''}`}
-            style={activeId === sec.id ? { background: '#000F26', borderColor: '#000F26' } : {}}
             onClick={() => onNav(sec.id)}
           >
             {sec.label}
@@ -525,12 +517,12 @@ function ProfundizacionTab({ data }) {
   const b = Object.fromEntries(data.bloques.map(bloque => [bloque.id, bloque]))
 
   return (
-    <main>
-      <div className="page-header" style={{ borderBottom: `3px solid ${ACCENT}` }}>
-        <div className="container">
-          <h1 className="page-title">{data.titulo}</h1>
-          <p className="page-desc">{data.descripcion}</p>
-        </div>
+    <main className="news-page">
+      <div className="container">
+        <header className="news-header">
+          <h1 className="news-title">{data.titulo}</h1>
+          <p className="news-desc">{data.descripcion}</p>
+        </header>
       </div>
 
       <ProfPills activeId={activeId} onNav={scrollTo} />
@@ -573,8 +565,7 @@ export default function SST() {
           {TABS.map(tab => (
             <button
               key={tab.id}
-              className={`sst-subtab-btn${active === tab.id ? ' sst-subtab-btn--active' : ''}`}
-              style={active === tab.id ? { borderBottomColor: ACCENT, color: '#000F26' } : {}}
+              className={`sst-subtab-btn${active === tab.id ? ' active' : ''}`}
               onClick={() => setActive(tab.id)}
             >
               {tab.label}

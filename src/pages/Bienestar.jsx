@@ -28,7 +28,7 @@ function Callout({ children }) {
 
 function Maxim({ children }) {
   return (
-    <p className="uc-maxim" style={{ borderLeftColor: ACCENT, color: '#374151' }}>
+    <p className="uc-maxim">
       {children}
     </p>
   )
@@ -41,7 +41,6 @@ function ExternalBtn({ href, children }) {
       target="_blank"
       rel="noopener noreferrer"
       className="uc-ext-btn"
-      style={{ background: '#000F26' }}
     >
       {children} →
     </a>
@@ -70,7 +69,7 @@ function SecAcceso({ bloque }) {
         <div className="uc-banner-overlay">
           <p className="uc-banner-text">{bloque.titulo}</p>
           {bloque.nota && (
-            <span className="uc-banner-badge" style={{ background: '#FBBC09' }}>
+            <span className="uc-banner-badge">
               {bloque.nota}
             </span>
           )}
@@ -78,7 +77,7 @@ function SecAcceso({ bloque }) {
       </div>
       {bloque.maxim && <Maxim>{bloque.maxim}</Maxim>}
       {bloque.fuente && (
-        <div className="uc-actions" style={{ marginTop: '20px' }}>
+        <div className="uc-actions">
           <ExternalBtn href={bloque.fuente}>Ir a Unicorporativa</ExternalBtn>
         </div>
       )}
@@ -95,9 +94,9 @@ function SecFechas({ bloque }) {
         <table className="uc-table">
           <thead>
             <tr>
-              <th style={{ color: '#000F26' }}>Periodo</th>
-              <th style={{ color: '#000F26' }}>Actividad</th>
-              <th style={{ color: '#000F26' }}>Fecha</th>
+              <th>Periodo</th>
+              <th>Actividad</th>
+              <th>Fecha</th>
             </tr>
           </thead>
           <tbody>
@@ -197,12 +196,12 @@ function UnicorporativaTab({ data }) {
   const b = Object.fromEntries(data.bloques.map(bloque => [bloque.id, bloque]))
 
   return (
-    <main>
-      <div className="page-header" style={{ borderBottom: `3px solid ${ACCENT}` }}>
-        <div className="container">
-          <h1 className="page-title">{data.titulo}</h1>
-          <p className="page-desc">{data.descripcion}</p>
-        </div>
+    <main className="news-page">
+      <div className="container">
+        <header className="news-header">
+          <h1 className="news-title">{data.titulo}</h1>
+          <p className="news-desc">{data.descripcion}</p>
+        </header>
       </div>
 
       <div className="section">
@@ -235,7 +234,6 @@ export default function Bienestar() {
             <button
               key={tab.id}
               className={`bienestar-subtab-btn${active === tab.id ? ' bienestar-subtab-btn--active' : ''}`}
-              style={active === tab.id ? { borderBottomColor: ACCENT, color: '#000F26' } : {}}
               onClick={() => setActive(tab.id)}
             >
               {tab.label}

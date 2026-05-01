@@ -1,27 +1,12 @@
-import { defaultNews } from '../data/defaultNews'
-
-const STORAGE_KEY = 'th_noticias'
-
-export function loadNews() {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY)
-    if (raw) return JSON.parse(raw)
-  } catch {
-    // ignore
-  }
-  return defaultNews
-}
-
-export function saveNews(news) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(news))
-}
+// Obsoleto: La persistencia ahora se maneja vía API en NewsContext.jsx
+// Se mantiene este archivo solo para funciones de exportación/importación de archivos locales si se requiere.
 
 export function exportNews(news) {
   const blob = new Blob([JSON.stringify(news, null, 2)], { type: 'application/json' })
   const url = URL.createObjectURL(blob)
   const a = document.createElement('a')
   a.href = url
-  a.download = 'noticias.json'
+  a.download = `noticias_talentohumano_${new Date().toISOString().slice(0, 10)}.json`
   a.click()
   URL.revokeObjectURL(url)
 }

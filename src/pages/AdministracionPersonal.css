@@ -1,334 +1,338 @@
 /* ══════════════════════════════════════════════
-   SUBTAB BAR  (shared between both tabs)
-══════════════════════════════════════════════ */
+   SUBTAB BAR (Glassmorphism & Dark)
+   ══════════════════════════════════════════════ */
 .subtab-bar {
-  background: #fff;
-  border-bottom: 1px solid #e5e7eb;
+  background: rgba(0, 10, 26, 0.95);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  position: sticky;
+  top: 85px;
+  z-index: 900;
 }
 
 .subtab-inner {
   display: flex;
-  gap: 0;
+  justify-content: center;
 }
 
 .subtab-btn {
-  background: none;
+  background: transparent;
   border: none;
-  border-bottom: 2px solid transparent;
-  padding: 14px 24px;
-  font-family: inherit;
-  font-size: 0.88rem;
-  font-weight: 600;
-  color: #6b7280;
+  border-bottom: 3px solid transparent;
+  padding: 20px 30px;
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.4);
   cursor: pointer;
-  transition: color 0.15s, border-color 0.15s;
-  margin-bottom: -1px;
-  letter-spacing: 0.01em;
+  transition: all 0.3s;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
   white-space: nowrap;
 }
 
-.subtab-btn:hover { color: #111827; }
+.subtab-btn:hover { color: #fff; }
 
-
-/* ══════════════════════════════════════════════
-   INSTRUCTIVO LAYOUT — two-column desktop
-══════════════════════════════════════════════ */
-.ti-layout {
-  display: grid;
-  grid-template-columns: 210px 1fr;
-  gap: 0 48px;
-  align-items: start;
-  padding-top: 40px;
-  padding-bottom: 80px;
+.subtab-btn--active {
+  color: var(--gold) !important;
+  border-bottom-color: var(--gold) !important;
 }
 
+/* ══════════════════════════════════════════════
+   INSTRUCTIVO LAYOUT
+   ══════════════════════════════════════════════ */
+.ti-layout {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 0 60px;
+  padding-bottom: 100px;
+  align-items: start;
+}
 
 /* ══════════════════════════════════════════════
    DESKTOP SIDEBAR NAV
-══════════════════════════════════════════════ */
+   ══════════════════════════════════════════════ */
 .ti-nav {
   position: sticky;
-  top: 24px;
+  top: 180px;
 }
 
 .ti-nav-label {
-  font-size: 0.7rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: rgba(255, 255, 255, 0.3);
   text-transform: uppercase;
-  color: #9ca3af;
-  margin: 0 0 12px 12px;
+  letter-spacing: 0.1em;
+  margin-bottom: 20px;
+  padding-left: 15px;
 }
 
 .ti-nav-list {
   list-style: none;
-  margin: 0;
   padding: 0;
+  margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 5px;
 }
 
 .ti-nav-btn {
   display: block;
   width: 100%;
   text-align: left;
-  background: none;
+  background: transparent;
   border: none;
-  border-left: 2px solid #e5e7eb;
-  padding: 8px 12px;
-  font-family: inherit;
-  font-size: 0.82rem;
-  font-weight: 500;
-  color: #6b7280;
+  border-left: 2px solid rgba(255, 255, 255, 0.05);
+  padding: 10px 15px;
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.5);
   cursor: pointer;
-  transition: color 0.15s, border-color 0.15s, background 0.15s;
-  border-radius: 0 4px 4px 0;
+  transition: all 0.2s;
 }
 
 .ti-nav-btn:hover {
-  color: #111827;
-  background: #f9fafb;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.03);
 }
 
 .ti-nav-btn--active {
-  font-weight: 700;
-  background: #E6F3F9;
+  color: var(--gold) !important;
+  border-left-color: var(--gold) !important;
+  background: rgba(251, 188, 9, 0.05) !important;
 }
-
 
 /* ══════════════════════════════════════════════
    MOBILE PILL NAV
-══════════════════════════════════════════════ */
+   ══════════════════════════════════════════════ */
 .ti-pills-bar {
   display: none;
-  background: #fff;
-  border-bottom: 1px solid #e5e7eb;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
+  background: #000a1a;
+  padding: 15px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  position: sticky;
+  top: 155px;
+  z-index: 850;
 }
-.ti-pills-bar::-webkit-scrollbar { display: none; }
 
 .ti-pills-inner {
   display: flex;
-  gap: 8px;
-  padding: 10px 16px;
-  width: max-content;
+  gap: 12px;
+  padding: 0 20px;
+  overflow-x: auto;
+  scrollbar-width: none;
 }
+.ti-pills-inner::-webkit-scrollbar { display: none; }
 
 .ti-pill {
-  background: none;
-  border: 1.5px solid #d1d5db;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #fff;
+  padding: 8px 18px;
   border-radius: 20px;
-  padding: 6px 14px;
-  font-family: inherit;
-  font-size: 0.78rem;
-  font-weight: 600;
-  color: #374151;
-  cursor: pointer;
   white-space: nowrap;
-  transition: background 0.15s, color 0.15s, border-color 0.15s;
+  font-weight: 700;
+  font-size: 0.85rem;
+  transition: all 0.3s;
 }
 
-.ti-pill--active { color: #fff; }
-
-.ti-pill:not(.ti-pill--active):hover {
-  border-color: #9ca3af;
-  background: #f9fafb;
+.ti-pill--active {
+  background: var(--coastal) !important;
+  border-color: var(--coastal) !important;
+  color: #fff !important;
 }
-
 
 /* ══════════════════════════════════════════════
    CONTENT SECTIONS
-══════════════════════════════════════════════ */
-.ti-content {
-  min-width: 0;
-}
+   ══════════════════════════════════════════════ */
+.ti-content { min-width: 0; }
 
 .instructivo-section {
-  padding: 48px 0;
-  border-bottom: 1px solid #e5e7eb;
-  scroll-margin-top: 24px;
+  padding: 80px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-.instructivo-section:last-child {
-  border-bottom: none;
-  padding-bottom: 0;
-}
+.instructivo-section:last-child { border-bottom: none; }
 
 .ti-section-title {
-  font-family: 'Playfair Display', serif;
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: #111827;
-  margin: 0 0 16px;
-  letter-spacing: -0.01em;
+  font-family: var(--font-heading);
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: #fff;
+  margin-bottom: 30px;
+  letter-spacing: -0.02em;
 }
 
 .ti-section-intro {
-  font-size: 0.92rem;
-  color: #4b5563;
-  line-height: 1.75;
-  max-width: 700px;
-  margin: 0 0 20px;
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 30px;
+  max-width: 800px;
 }
-
 
 /* ══════════════════════════════════════════════
    ITEMS LIST
-══════════════════════════════════════════════ */
+   ══════════════════════════════════════════════ */
 .ti-items-list {
   list-style: none;
-  margin: 0 0 20px;
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 15px;
+  margin-bottom: 30px;
 }
 
 .ti-item {
   display: flex;
+  gap: 15px;
   align-items: flex-start;
-  gap: 12px;
-  font-size: 0.88rem;
-  color: #374151;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 1.05rem;
   line-height: 1.6;
 }
 
 .ti-item-dot {
-  flex-shrink: 0;
-  width: 7px;
-  height: 7px;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
-  margin-top: 7px;
+  background: var(--coastal) !important;
+  margin-top: 8px;
+  flex-shrink: 0;
 }
-
 
 /* ══════════════════════════════════════════════
    CALLOUTS
-══════════════════════════════════════════════ */
+   ══════════════════════════════════════════════ */
 .ti-callout {
-  border-radius: 8px;
-  padding: 14px 18px;
-  font-size: 0.87rem;
-  line-height: 1.65;
-  margin: 20px 0 0;
-  max-width: 680px;
-}
-
-.ti-callout--info {
-  background: #E6F3F9;
-  border-left: 3px solid #0C82B2;
-  color: #0A3D52;
+  border-left: 4px solid var(--coastal);
+  background: rgba(12, 130, 178, 0.05);
+  padding: 20px 30px;
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.8);
+  border-radius: 0 16px 16px 0;
+  margin: 30px 0;
 }
 
 .ti-callout--warning {
-  background: #fffbeb;
-  border-left: 3px solid #f59e0b;
-  color: #78350f;
+  border-left-color: var(--gold);
+  background: rgba(251, 188, 9, 0.05);
 }
-
 
 /* ══════════════════════════════════════════════
    MAXIM / BLOCKQUOTE
-══════════════════════════════════════════════ */
+   ══════════════════════════════════════════════ */
 .ti-maxim {
-  border-left: 3px solid;
-  margin: 24px 0 0;
-  padding: 12px 20px;
-  font-family: 'Playfair Display', serif;
-  font-size: 1rem;
+  position: relative;
+  background: linear-gradient(135deg, rgba(12, 130, 178, 0.08) 0%, rgba(251, 188, 9, 0.05) 100%);
+  border-left: 5px solid var(--gold) !important;
+  padding: 45px 50px;
+  border-radius: 0 30px 30px 0;
+  margin: 50px 0;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+  border-top: 1px solid rgba(255,255,255,0.03);
+  border-right: 1px solid rgba(255,255,255,0.03);
+  overflow: hidden;
+  font-family: var(--font-heading);
+  font-size: 1.25rem;
+  font-weight: 700;
   font-style: italic;
-  color: #374151;
-  line-height: 1.7;
+  line-height: 1.6;
+  color: #fff;
 }
 
+.ti-maxim::before {
+  content: '"';
+  position: absolute;
+  top: -20px;
+  right: 20px;
+  font-family: var(--font-heading);
+  font-size: 10rem;
+  font-weight: 900;
+  color: rgba(251, 188, 9, 0.1);
+  line-height: 1;
+  pointer-events: none;
+}
 
 /* ══════════════════════════════════════════════
    CONTACTS
-══════════════════════════════════════════════ */
+   ══════════════════════════════════════════════ */
 .ti-contact-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
-  margin-bottom: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+  margin-bottom: 30px;
 }
 
 .ti-contact-card {
-  border: 1px solid #e5e7eb;
-  border-radius: 10px;
-  padding: 20px 16px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 20px;
+  padding: 30px;
   text-align: center;
-  background: #fafafa;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
+  gap: 15px;
 }
 
 .ti-contact-avatar {
-  width: 44px;
-  height: 44px;
+  width: 60px;
+  height: 60px;
   border-radius: 50%;
+  background: var(--coastal) !important;
+  color: #fff !important;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: 'Playfair Display', serif;
-  font-size: 1.15rem;
-  font-weight: 700;
+  font-size: 1.5rem;
+  font-weight: 800;
 }
 
 .ti-contact-name {
-  font-size: 0.78rem;
-  font-weight: 700;
-  color: #111827;
+  font-weight: 800;
+  font-size: 0.95rem;
+  color: #fff;
   margin: 0;
-  line-height: 1.3;
-  text-align: center;
 }
 
 .ti-contact-email {
-  font-size: 0.75rem;
+  color: var(--gold) !important;
   text-decoration: none;
-  font-weight: 500;
-  word-break: break-all;
+  font-weight: 600;
+  font-size: 0.85rem;
 }
-
-.ti-contact-email:hover { text-decoration: underline; }
-
 
 /* ══════════════════════════════════════════════
    PDF VIEWER
-══════════════════════════════════════════════ */
+   ══════════════════════════════════════════════ */
 .pdf-viewer-wrapper {
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
+  background: #00122e;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
   overflow: hidden;
-  background: #f9fafb;
-  box-shadow: 0 1px 6px rgba(0,0,0,0.06);
+  margin-bottom: 25px;
 }
 
 .pdf-viewer {
   display: block;
   width: 100%;
-  height: 740px;
+  height: 720px;
   border: none;
 }
 
-
 /* ══════════════════════════════════════════════
    VIDEO EMBED
-══════════════════════════════════════════════ */
+   ══════════════════════════════════════════════ */
 .ti-video-wrapper {
   position: relative;
-  width: 100%;
-  padding-bottom: 56.25%; /* 16:9 */
+  padding-bottom: 56.25%;
   height: 0;
-  border-radius: 10px;
+  border-radius: 24px;
   overflow: hidden;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.10);
-  margin-bottom: 20px;
+  margin-bottom: 30px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .ti-video {
@@ -339,105 +343,77 @@
   border: none;
 }
 
-
 /* ══════════════════════════════════════════════
    CESANTIAS PAIR
-══════════════════════════════════════════════ */
+   ══════════════════════════════════════════════ */
 .ti-cesantias-pair {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 28px;
-  margin-top: 32px;
+  gap: 40px;
+  margin-top: 40px;
 }
 
 .ti-cesantias-card {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
+  background: rgba(255, 255, 255, 0.02);
+  padding: 40px;
+  border-radius: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .ti-cesantias-card-title {
-  font-family: 'Playfair Display', serif;
-  font-size: 1rem;
-  font-weight: 700;
-  margin: 0;
-  line-height: 1.4;
+  font-family: var(--font-heading);
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--coastal) !important;
+  margin-bottom: 20px;
 }
 
 .ti-cesantias-card .pdf-viewer {
-  height: 520px;
+  height: 430px;
 }
-
 
 /* ══════════════════════════════════════════════
    EXTERNAL BUTTON
-══════════════════════════════════════════════ */
+   ══════════════════════════════════════════════ */
 .instructivo-actions {
-  margin-top: 16px;
   display: flex;
   justify-content: flex-end;
+  margin: 20px 0;
 }
 
 .instructivo-btn {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 10px 22px;
-  border-radius: 6px;
-  color: #fff;
-  font-family: inherit;
-  font-size: 0.83rem;
-  font-weight: 600;
+  gap: 8px;
+  padding: 12px 24px;
+  border-radius: 12px;
+  background: var(--gold) !important;
+  color: var(--navy) !important;
+  font-weight: 800;
   text-decoration: none;
-  transition: opacity 0.15s;
-  letter-spacing: 0.01em;
+  transition: all 0.2s;
+  font-size: 0.9rem;
 }
 
-.instructivo-btn:hover { opacity: 0.88; }
-
+.instructivo-btn:hover {
+  background: #fff !important;
+  transform: translateY(-2px);
+  color: var(--navy) !important;
+}
 
 /* ══════════════════════════════════════════════
    RESPONSIVE
-══════════════════════════════════════════════ */
+   ══════════════════════════════════════════════ */
 @media (max-width: 900px) {
-  .ti-layout {
-    grid-template-columns: 1fr;
-    padding-top: 0;
-  }
-
+  .ti-layout { grid-template-columns: 1fr; }
   .ti-nav { display: none; }
   .ti-pills-bar { display: block; }
-
-  .ti-contact-grid {
-    grid-template-columns: 1fr;
-    max-width: 320px;
-  }
-
-  .ti-cesantias-pair {
-    grid-template-columns: 1fr;
-  }
-
+  .ti-cesantias-pair { grid-template-columns: 1fr; }
+  .ti-cesantias-card { padding: 30px; }
   .ti-cesantias-card .pdf-viewer {
-    height: 400px;
+    height: 430px;
   }
-}
-
-@media (max-width: 600px) {
-  .subtab-inner { overflow-x: auto; }
-  .subtab-btn { padding: 12px 16px; font-size: 0.82rem; }
-
-  .pdf-viewer { height: 460px; }
-
-  .instructivo-actions {
-    justify-content: stretch;
-  }
-
-  .instructivo-btn {
-    width: 100%;
-    justify-content: center;
-  }
-
-  .ti-contact-grid {
-    max-width: 100%;
-  }
+  .pdf-viewer { height: 500px; }
+  .instructivo-actions { justify-content: stretch; }
+  .instructivo-btn { width: 100%; justify-content: center; }
 }

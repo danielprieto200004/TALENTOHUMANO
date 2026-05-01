@@ -19,12 +19,12 @@ const tipoIcon = {
 
 export default function StaticPage({ data, accentColor }) {
   return (
-    <main>
-      <div className="page-header" style={{ borderBottom: `3px solid ${accentColor}` }}>
-        <div className="container">
-          <h1 className="page-title">{data.titulo}</h1>
-          <p className="page-desc">{data.descripcion}</p>
-        </div>
+    <main className="news-page">
+      <div className="container">
+        <header className="news-header">
+          <h1 className="news-title">{data.titulo}</h1>
+          <p className="news-desc">{data.descripcion}</p>
+        </header>
       </div>
 
       <div className="section">

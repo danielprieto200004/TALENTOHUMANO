@@ -38,7 +38,7 @@
 
 .page-title {
   margin: 0 0 8px;
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-heading);
   font-size: clamp(1.6rem, 4vw, 2.2rem);
   font-weight: 800;
   color: var(--text-1);
@@ -112,7 +112,7 @@
 
 .hero-title {
   margin: 0 0 18px;
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-heading);
   font-size: clamp(2.2rem, 5vw, 3.4rem);
   font-weight: 800;
   color: #fff;
@@ -186,7 +186,7 @@
 
 .section-title {
   margin: 0 0 32px;
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-heading);
   font-size: 1.45rem;
   font-weight: 700;
   color: var(--text-1);
@@ -221,7 +221,7 @@
 
 .contact-title {
   margin: 0 0 14px;
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-heading);
   font-size: 1.7rem;
   font-weight: 700;
   color: #fff;
