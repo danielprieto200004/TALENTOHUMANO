@@ -66,7 +66,7 @@ export default function NewsEditor({ noticia, onSave, onClose }) {
     const file = e.target.files[0]
     if (!file) return
     setLoadingImg(true)
-    
+
     try {
       const base64 = await resizeImage(file)
       const res = await fetch('/api/upload-image', {
@@ -94,7 +94,7 @@ export default function NewsEditor({ noticia, onSave, onClose }) {
     // To avoid timezone shifting to previous day, we treat the date as local noon
     const [y, m, d] = form.fechaPublicacion.split('-')
     const finalDate = new Date(y, m - 1, d, 12, 0, 0).toISOString()
-    
+
     onSave({
       ...form,
       fechaPublicacion: finalDate,
@@ -142,8 +142,9 @@ export default function NewsEditor({ noticia, onSave, onClose }) {
               value={form.cuerpo}
               onChange={handleChange}
               rows={6}
-              placeholder="Puedes usar HTML básico: <p>, <ul>, <li>, <strong>"
+              placeholder="Escribe el contenido de la noticia"
             />
+            <p className="field-hint">Usa doble salto de línea para crear párrafos.</p>
           </div>
 
           <div className="field">
@@ -200,7 +201,7 @@ export default function NewsEditor({ noticia, onSave, onClose }) {
                       style={{ display: 'none' }}
                     />
                   </label>
-                  
+
                   <div className="field-hint" style={{ margin: '12px 0 6px' }}>O elige un estilo abstracto:</div>
                   <div className="pattern-selector">
                     {PATTERNS.map((p) => (

@@ -1,6 +1,7 @@
 import { NavLink } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import './Navbar.css'
+import { FaPencilAlt } from 'react-icons/fa';
 
 export default function Navbar() {
   const { isEditor, logout } = useAuth()
@@ -41,7 +42,7 @@ export default function Navbar() {
             </button>
           ) : (
             <NavLink to="/editor" className="nav-v2-editor-link">
-              Acceso Editor
+              <FaPencilAlt />
             </NavLink>
           )}
         </nav>

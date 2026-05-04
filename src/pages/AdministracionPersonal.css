@@ -410,10 +410,295 @@
   .ti-pills-bar { display: block; }
   .ti-cesantias-pair { grid-template-columns: 1fr; }
   .ti-cesantias-card { padding: 30px; }
-  .ti-cesantias-card .pdf-viewer {
-    height: 430px;
-  }
+  .ti-cesantias-card .pdf-viewer { height: 430px; }
   .pdf-viewer { height: 500px; }
   .instructivo-actions { justify-content: stretch; }
   .instructivo-btn { width: 100%; justify-content: center; }
+}
+
+/* ══════════════════════════════════════════════
+   PDF DRAWER
+   ══════════════════════════════════════════════ */
+.pdf-drawer-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 5, 15, 0.65);
+  backdrop-filter: blur(8px);
+  z-index: 2000;
+  animation: tiFadeIn 0.2s ease-out;
+}
+
+@keyframes tiFadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+.pdf-drawer-panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: min(700px, 95vw);
+  background: #001228;
+  border-left: 1px solid rgba(12, 130, 178, 0.25);
+  display: flex;
+  flex-direction: column;
+  box-shadow: -24px 0 64px rgba(0, 0, 0, 0.55);
+  animation: tiDrawerIn 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes tiDrawerIn {
+  from { transform: translateX(100%); }
+  to   { transform: translateX(0); }
+}
+
+.pdf-drawer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 26px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  flex-shrink: 0;
+  gap: 16px;
+}
+
+.pdf-drawer-title {
+  font-family: var(--font-heading);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #fff;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pdf-drawer-close {
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.07);
+  color: rgba(255, 255, 255, 0.6);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  transition: all 0.2s;
+}
+
+.pdf-drawer-close:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+  transform: rotate(90deg);
+}
+
+.pdf-drawer-iframe {
+  flex: 1;
+  width: 100%;
+  border: none;
+  display: block;
+}
+
+/* ══════════════════════════════════════════════
+   SMART DOCUMENT CARD
+   ══════════════════════════════════════════════ */
+.ti-smart-doc-card {
+  background: rgba(12, 130, 178, 0.04);
+  border: 1px solid rgba(12, 130, 178, 0.18);
+  border-radius: 20px;
+  overflow: hidden;
+  transition: border-color 0.3s, box-shadow 0.3s, transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.ti-smart-doc-card:hover {
+  border-color: rgba(12, 130, 178, 0.4);
+  transform: translateY(-4px);
+  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.35);
+}
+
+.ti-smart-doc-preview {
+  position: relative;
+  background: linear-gradient(135deg, rgba(12, 130, 178, 0.12) 0%, rgba(0, 18, 40, 0.9) 100%);
+  height: 130px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  overflow: hidden;
+}
+
+.ti-smart-doc-icon {
+  font-size: 2.8rem;
+  opacity: 0.55;
+  transition: all 0.3s;
+  user-select: none;
+}
+
+.ti-smart-doc-preview:hover .ti-smart-doc-icon {
+  opacity: 0.2;
+  transform: scale(0.8);
+}
+
+.ti-smart-doc-hint {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.85rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0;
+  background: rgba(12, 130, 178, 0.28);
+  transition: opacity 0.25s;
+}
+
+.ti-smart-doc-preview:hover .ti-smart-doc-hint { opacity: 1; }
+
+.ti-smart-doc-info { padding: 18px 22px; }
+
+.ti-smart-doc-title {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: #fff;
+  margin: 0 0 5px;
+  line-height: 1.4;
+}
+
+.ti-smart-doc-meta {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.3);
+  margin: 0 0 14px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.ti-smart-doc-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.ti-smart-doc-btn-primary {
+  flex: 1;
+  padding: 9px 14px;
+  background: var(--coastal);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 0.82rem;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+  text-align: center;
+  min-width: 0;
+  font-family: var(--font-body);
+}
+
+.ti-smart-doc-btn-primary:hover {
+  background: #0e9ad4;
+  transform: translateY(-1px);
+}
+
+.ti-smart-doc-btn-secondary {
+  padding: 9px 14px;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 0.82rem;
+  text-decoration: none;
+  transition: border-color 0.2s, color 0.2s;
+  white-space: nowrap;
+  font-family: var(--font-body);
+}
+
+.ti-smart-doc-btn-secondary:hover {
+  border-color: rgba(255, 255, 255, 0.28);
+  color: #fff;
+}
+
+/* Cesantias grid uses SmartDocCard directly */
+.ti-cesantias-pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-top: 32px;
+}
+
+/* ══════════════════════════════════════════════
+   NAV PROGRESS INDICATOR
+   ══════════════════════════════════════════════ */
+.ti-nav-progress {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 15px;
+  margin-top: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.ti-nav-progress-text {
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.28);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.ti-nav-progress-bar {
+  width: 56px;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.07);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.ti-nav-progress-fill {
+  height: 100%;
+  background: var(--gold);
+  border-radius: 2px;
+  transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.ti-nav-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.ti-nav-index {
+  font-size: 0.68rem;
+  color: rgba(255, 255, 255, 0.2);
+  font-weight: 800;
+  width: 20px;
+  text-align: right;
+  flex-shrink: 0;
+  font-variant-numeric: tabular-nums;
+  transition: color 0.2s;
+}
+
+.ti-nav-btn--active .ti-nav-index { color: var(--gold); }
+
+/* ══════════════════════════════════════════════
+   SECTION ENTRANCE ANIMATION
+   ══════════════════════════════════════════════ */
+.instructivo-section {
+  opacity: 0;
+  transform: translateY(22px);
+  transition: opacity 0.5s ease, transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.instructivo-section.ti-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (max-width: 900px) {
+  .pdf-drawer-panel { width: 100vw; }
+  .ti-cesantias-pair { grid-template-columns: 1fr; }
 }

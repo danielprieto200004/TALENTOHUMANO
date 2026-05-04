@@ -1,4 +1,6 @@
-import { useState, useEffect, useRef } from 'react'
+import { memo, useCallback, useState, useEffect, useRef } from 'react'
+import { createPortal } from 'react-dom'
+import { IoCloseOutline, IoExpandOutline } from 'react-icons/io5'
 import StaticPage from './StaticPage'
 import { sstData, sstTab2Data } from '../data/staticSections'
 
@@ -57,6 +59,45 @@ const NAV_SECTIONS = [
 
 // ── Lightbox ──────────────────────────────────────────────────────────────────
 function Lightbox({ src, alt, onClose }) {
+  const [loaded, setLoaded] = useState(false)
+
+  useEffect(() => {
+    const onKey = e => { if (e.key === 'Escape') onClose() }
+    document.addEventListener('keydown', onKey)
+    document.body.style.overflow = 'hidden'
+    return () => {
+      document.removeEventListener('keydown', onKey)
+      document.body.style.overflow = ''
+    }
+  }, [onClose])
+
+  return createPortal(
+    <div className={`sst-lb-backdrop ${loaded ? 'is-active' : ''}`} onClick={onClose}>
+      <button className="sst-lb-close" onClick={onClose} aria-label="Cerrar">
+        <IoCloseOutline />
+      </button>
+      <div className="sst-lb-container" onClick={e => e.stopPropagation()}>
+        {!loaded && <div className="sst-lb-loader" />}
+        <img
+          src={src}
+          alt={alt}
+          className={`sst-lb-img ${loaded ? 'is-loaded' : ''}`}
+          onLoad={() => setLoaded(true)}
+        />
+        {loaded && alt && (
+          <div className="sst-lb-caption">
+            <IoExpandOutline className="sst-lb-caption-icon" />
+            <span>{alt}</span>
+          </div>
+        )}
+      </div>
+    </div>,
+    document.body
+  )
+}
+
+// ── PDF Drawer ────────────────────────────────────────────────────────────────
+function PdfDrawer({ src, title, onClose }) {
   useEffect(() => {
     const onKey = e => { if (e.key === 'Escape') onClose() }
     document.addEventListener('keydown', onKey)
@@ -68,9 +109,14 @@ function Lightbox({ src, alt, onClose }) {
   }, [onClose])
 
   return (
-    <div className="sst-lb-backdrop" onClick={onClose}>
-      <button className="sst-lb-close" onClick={onClose} aria-label="Cerrar">✕</button>
-      <img src={src} alt={alt} className="sst-lb-img" onClick={e => e.stopPropagation()} />
+    <div className="pdf-drawer-backdrop" onClick={onClose}>
+      <div className="pdf-drawer-panel" onClick={e => e.stopPropagation()}>
+        <div className="pdf-drawer-header">
+          <span className="pdf-drawer-title">{title}</span>
+          <button className="pdf-drawer-close" onClick={onClose} aria-label="Cerrar">✕</button>
+        </div>
+        <iframe src={src} title={title} className="pdf-drawer-iframe" />
+      </div>
     </div>
   )
 }
@@ -166,41 +212,55 @@ function ProfActions({ children }) {
   return <div className="prof-actions">{children}</div>
 }
 
-// ── PDF card (title + embed + button stacked) ─────────────────────────────────
-function PdfCard({ titulo, pdf, fuente }) {
+// ── Smart Document Card ───────────────────────────────────────────────────────
+function SmartDocCard({ titulo, pdf, fuente, onOpenDrawer }) {
   return (
-    <div className="prof-pdf-card">
-      <ProfSubtitle>{titulo}</ProfSubtitle>
-      <ProfPdf src={pdf} title={titulo} />
-      <ProfActions>
-        <ProfBtn href={fuente}>Abrir documento original</ProfBtn>
-      </ProfActions>
+    <div className="smart-doc-card">
+      {pdf && (
+        <div className="smart-doc-preview" onClick={() => onOpenDrawer(pdf, titulo)}>
+          <div className="smart-doc-preview-icon">📄</div>
+          <div className="smart-doc-preview-hint">Ver documento</div>
+        </div>
+      )}
+      <div className="smart-doc-info">
+        <p className="smart-doc-title">{titulo}</p>
+        <p className="smart-doc-meta">PDF · Documentación oficial</p>
+        <div className="smart-doc-actions">
+          {pdf && (
+            <button className="smart-doc-btn-primary" onClick={() => onOpenDrawer(pdf, titulo)}>
+              Ver
+            </button>
+          )}
+          {fuente && (
+            <a href={fuente} target="_blank" rel="noopener noreferrer" className="smart-doc-btn-secondary">
+              Abrir original ↗
+            </a>
+          )}
+        </div>
+      </div>
     </div>
   )
 }
 
 // ── Section renderers ─────────────────────────────────────────────────────────
 
-function SecPolitica({ b }) {
+function SecPolitica({ b, onOpenDrawer }) {
   return (
     <ProfSection id="sec-politica">
       <ProfTitle>{b.titulo}</ProfTitle>
-      <ProfPdf src={PDF_POLITICA} title={b.titulo} />
-      <ProfActions>
-        <ProfBtn href={b.fuente}>Abrir documento original</ProfBtn>
-      </ProfActions>
+      <SmartDocCard titulo={b.titulo} pdf={PDF_POLITICA} fuente={b.fuente} onOpenDrawer={onOpenDrawer} />
     </ProfSection>
   )
 }
 
-function SecResolucion({ bRes, bRoles, bCopasst }) {
+function SecResolucion({ bRes, bRoles, bCopasst, onOpenDrawer }) {
   return (
     <ProfSection id="sec-resolucion">
       <ProfTitle>Resoluciones y Roles</ProfTitle>
-      <div className="prof-stack">
-        <PdfCard titulo={bRes.titulo}    pdf={PDF_RESOLUCION} fuente={bRes.fuente} />
-        <PdfCard titulo={bRoles.titulo}  pdf={PDF_ROLES}      fuente={bRoles.fuente} />
-        <PdfCard titulo={bCopasst.titulo} pdf={PDF_COPASST}   fuente={bCopasst.fuente} />
+      <div className="prof-docs-grid prof-docs-grid--3">
+        <SmartDocCard titulo={bRes.titulo}     pdf={PDF_RESOLUCION} fuente={bRes.fuente}     onOpenDrawer={onOpenDrawer} />
+        <SmartDocCard titulo={bRoles.titulo}   pdf={PDF_ROLES}      fuente={bRoles.fuente}   onOpenDrawer={onOpenDrawer} />
+        <SmartDocCard titulo={bCopasst.titulo} pdf={PDF_COPASST}    fuente={bCopasst.fuente} onOpenDrawer={onOpenDrawer} />
       </div>
       {bCopasst.nota && (
         <ProfCallout type="info">{bCopasst.nota}</ProfCallout>
@@ -234,8 +294,7 @@ function SecContacto({ b }) {
   )
 }
 
-function SecEmergencias({ bGest, bInv, bEncuentro }) {
-  const [lightbox, setLightbox] = useState(null)
+const SecEmergencias = memo(function SecEmergencias({ bGest, bInv, bEncuentro, onOpenImage }) {
 
   return (
     <ProfSection id="sec-emergencias">
@@ -260,10 +319,13 @@ function SecEmergencias({ bGest, bInv, bEncuentro }) {
         </ProfActions>
         <div
           className="prof-img-card prof-img-zoomable"
-          onClick={() => setLightbox({ src: invitacionBrigadistaImg, alt: 'Únete a la brigada' })}
+          onClick={() => onOpenImage(invitacionBrigadistaImg, 'Únete a la brigada')}
         >
-          <img src={invitacionBrigadistaImg} alt="Únete a la brigada" className="prof-img-full" />
-          <div className="prof-img-zoom-hint">Ver imagen</div>
+          <img src={invitacionBrigadistaImg} alt="Únete a la brigada" className="prof-img-full" loading="lazy" />
+          <div className="prof-img-zoom-hint">
+            <IoExpandOutline />
+            <span>Ver imagen</span>
+          </div>
         </div>
       </div>
 
@@ -272,10 +334,13 @@ function SecEmergencias({ bGest, bInv, bEncuentro }) {
         <ProfSubtitle>{bEncuentro.titulo}</ProfSubtitle>
         <div
           className="prof-img-card prof-img-zoomable"
-          onClick={() => setLightbox({ src: encuentroBrigadasImg, alt: 'Encuentro de brigadas UNIMINUTO' })}
+          onClick={() => onOpenImage(encuentroBrigadasImg, 'Encuentro de brigadas UNIMINUTO')}
         >
-          <img src={encuentroBrigadasImg} alt="Encuentro de brigadas UNIMINUTO" className="prof-img-full" />
-          <div className="prof-img-zoom-hint">Ver imagen</div>
+          <img src={encuentroBrigadasImg} alt="Encuentro de brigadas UNIMINUTO" className="prof-img-full" loading="lazy" />
+          <div className="prof-img-zoom-hint">
+            <IoExpandOutline />
+            <span>Ver imagen</span>
+          </div>
         </div>
         {bEncuentro.nota && (
           <ProfCallout type="info">{bEncuentro.nota}</ProfCallout>
@@ -286,10 +351,10 @@ function SecEmergencias({ bGest, bInv, bEncuentro }) {
         {bEncuentro.maxim && <ProfMaxim>{bEncuentro.maxim}</ProfMaxim>}
       </div>
 
-      {lightbox && <Lightbox src={lightbox.src} alt={lightbox.alt} onClose={() => setLightbox(null)} />}
+
     </ProfSection>
   )
-}
+})
 
 function SecRiesgos({ bBanner, bUno, bDos, bMatrices }) {
   return (
@@ -346,8 +411,7 @@ function SecAmbiental({ b }) {
   )
 }
 
-function SecSalud({ b }) {
-  const [lightbox, setLightbox] = useState(null)
+const SecSalud = memo(function SecSalud({ b, onOpenImage }) {
 
   return (
     <ProfSection id="sec-salud">
@@ -367,10 +431,13 @@ function SecSalud({ b }) {
           <div
             key={i}
             className="prof-tip-card prof-img-zoomable"
-            onClick={() => setLightbox({ src: tip.img, alt: tip.label })}
+            onClick={() => onOpenImage(tip.img, tip.label)}
           >
-            <img src={tip.img} alt={tip.label} className="prof-tip-img" />
-            <div className="prof-img-zoom-hint">Ver imagen</div>
+            <img src={tip.img} alt={tip.label} className="prof-tip-img" loading="lazy" />
+            <div className="prof-img-zoom-hint">
+              <IoExpandOutline />
+              <span>Ver imagen</span>
+            </div>
             <p className="prof-tip-label">{tip.label}</p>
           </div>
         ))}
@@ -384,10 +451,10 @@ function SecSalud({ b }) {
         <ProfItemsList items={b.items} />
       </div>
 
-      {lightbox && <Lightbox src={lightbox.src} alt={lightbox.alt} onClose={() => setLightbox(null)} />}
+
     </ProfSection>
   )
-}
+})
 
 function SecInduccion({ b }) {
   return (
@@ -405,17 +472,14 @@ function SecInduccion({ b }) {
   )
 }
 
-function SecSalidas({ b }) {
+function SecSalidas({ b, onOpenDrawer }) {
   return (
     <ProfSection id="sec-salidas">
       <ProfTitle>{b.titulo}</ProfTitle>
       <ProfBanner src={salidasCampoImg} alt="Salidas a campo" />
       {b.nota && <ProfCallout type="info">{b.nota}</ProfCallout>}
       <div className="prof-subsection">
-        <ProfPdf src={PDF_DECALOGO} title="Decálogo de autocuidado en salidas a campo" />
-        <ProfActions>
-          <ProfBtn href={b.fuente}>Abrir decálogo original</ProfBtn>
-        </ProfActions>
+        <SmartDocCard titulo="Decálogo de autocuidado en salidas a campo" pdf={PDF_DECALOGO} fuente={b.fuente} onOpenDrawer={onOpenDrawer} />
       </div>
       {/* Video requiere autenticación — se muestra imagen + botón */}
       <div className="prof-subsection">
@@ -431,19 +495,19 @@ function SecSalidas({ b }) {
   )
 }
 
-function SecVial({ b }) {
+function SecVial({ b, onOpenDrawer }) {
   const docs = [
-    { titulo: b.titulo,      pdf: PDF_VIAL,     fuente: b.fuente },
-    { titulo: b.titulodos,   pdf: PDF_RECLUSION, fuente: b.fuentedos },
-    { titulo: b.titulotres,  pdf: PDF_SALIDAS,   fuente: b.fuentetres },
+    { titulo: b.titulo,     pdf: PDF_VIAL,      fuente: b.fuente },
+    { titulo: b.titulodos,  pdf: PDF_RECLUSION,  fuente: b.fuentedos },
+    { titulo: b.titulotres, pdf: PDF_SALIDAS,    fuente: b.fuentetres },
   ]
   return (
     <ProfSection id="sec-vial">
       <ProfTitle>Seguridad Vial y Actores Viales</ProfTitle>
       <ProfText>{b.texto}</ProfText>
-      <div className="prof-stack">
+      <div className="prof-docs-grid prof-docs-grid--3">
         {docs.map((doc, i) => (
-          <PdfCard key={i} titulo={doc.titulo} pdf={doc.pdf} fuente={doc.fuente} />
+          <SmartDocCard key={i} titulo={doc.titulo} pdf={doc.pdf} fuente={doc.fuente} onOpenDrawer={onOpenDrawer} />
         ))}
       </div>
     </ProfSection>
@@ -452,21 +516,31 @@ function SecVial({ b }) {
 
 // ── Sidebar nav ───────────────────────────────────────────────────────────────
 function ProfNav({ activeId, onNav }) {
+  const activeIndex = NAV_SECTIONS.findIndex(s => s.id === activeId)
+  const progress = ((activeIndex + 1) / NAV_SECTIONS.length) * 100
+
   return (
     <nav className="prof-nav" aria-label="Secciones de profundización">
       <p className="prof-nav-label">En esta página</p>
       <ul className="prof-nav-list">
-        {NAV_SECTIONS.map(sec => (
+        {NAV_SECTIONS.map((sec, i) => (
           <li key={sec.id}>
             <button
               className={`prof-nav-btn${activeId === sec.id ? ' prof-nav-btn--active' : ''}`}
               onClick={() => onNav(sec.id)}
             >
+              <span className="prof-nav-index">{String(i + 1).padStart(2, '0')}</span>
               {sec.label}
             </button>
           </li>
         ))}
       </ul>
+      <div className="prof-nav-progress">
+        <span className="prof-nav-progress-text">{activeIndex + 1} / {NAV_SECTIONS.length}</span>
+        <div className="prof-nav-progress-bar">
+          <div className="prof-nav-progress-fill" style={{ width: `${progress}%` }} />
+        </div>
+      </div>
     </nav>
   )
 }
@@ -492,6 +566,8 @@ function ProfPills({ activeId, onNav }) {
 // ── ProfundizacionTab ─────────────────────────────────────────────────────────
 function ProfundizacionTab({ data }) {
   const [activeId, setActiveId] = useState(NAV_SECTIONS[0].id)
+  const [drawer, setDrawer] = useState(null)
+  const [lightbox, setLightbox] = useState(null)
   const observerRef = useRef(null)
 
   useEffect(() => {
@@ -510,10 +586,29 @@ function ProfundizacionTab({ data }) {
     return () => observerRef.current?.disconnect()
   }, [])
 
+  useEffect(() => {
+    const obs = new IntersectionObserver(
+      entries => entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible')
+          obs.unobserve(entry.target)
+        }
+      }),
+      { threshold: 0.06 }
+    )
+    NAV_SECTIONS.forEach(sec => {
+      const el = document.getElementById(sec.id)
+      if (el) obs.observe(el)
+    })
+    return () => obs.disconnect()
+  }, [])
+
   function scrollTo(id) {
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
   }
 
+  const openDrawer = useCallback((src, title) => setDrawer({ src, title }), [])
+  const openImage  = useCallback((src, alt)   => setLightbox({ src, alt }), [])
   const b = Object.fromEntries(data.bloques.map(bloque => [bloque.id, bloque]))
 
   return (
@@ -531,19 +626,22 @@ function ProfundizacionTab({ data }) {
         <div className="container prof-layout">
           <ProfNav activeId={activeId} onNav={scrollTo} />
           <div className="prof-content">
-            <SecPolitica    b={b['politica']} />
-            <SecResolucion  bRes={b['resolucion']} bRoles={b['roles-responsabilidades']} bCopasst={b['comite-paritario']} />
+            <SecPolitica    b={b['politica']} onOpenDrawer={openDrawer} />
+            <SecResolucion  bRes={b['resolucion']} bRoles={b['roles-responsabilidades']} bCopasst={b['comite-paritario']} onOpenDrawer={openDrawer} />
             <SecContacto    b={b['contacto']} />
-            <SecEmergencias bGest={b['gestion-emergencias']} bInv={b['invitation-brigadistas']} bEncuentro={b['encuentro-brigadas-uniminuto']} />
+            <SecEmergencias bGest={b['gestion-emergencias']} bInv={b['invitation-brigadistas']} bEncuentro={b['encuentro-brigadas-uniminuto']} onOpenImage={openImage} />
             <SecRiesgos     bBanner={b['gestion-riesgos']} bUno={b['gestion-riesgos-uno']} bDos={b['gestion-riesgos-dos']} bMatrices={b['matrices-de-peligro']} />
             <SecAmbiental   b={b['gestion-ambiental']} />
-            <SecSalud       b={b['salud']} />
+            <SecSalud       b={b['salud']} onOpenImage={openImage} />
             <SecInduccion   b={b['induccion-reinduccion']} />
-            <SecSalidas     b={b['salidas-a-campo']} />
-            <SecVial        b={b['seguridad-actores-viales']} />
+            <SecSalidas     b={b['salidas-a-campo']} onOpenDrawer={openDrawer} />
+            <SecVial        b={b['seguridad-actores-viales']} onOpenDrawer={openDrawer} />
           </div>
         </div>
       </div>
+
+      {drawer && <PdfDrawer src={drawer.src} title={drawer.title} onClose={() => setDrawer(null)} />}
+      {lightbox && <Lightbox src={lightbox.src} alt={lightbox.alt} onClose={() => setLightbox(null)} />}
     </main>
   )
 }

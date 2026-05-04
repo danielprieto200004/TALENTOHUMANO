@@ -20,6 +20,19 @@ export default function NewsDetail({ noticia, onClose }) {
   const color = CATEGORIA_COLOR[noticia.categoria] || '#000F26'
   const isPattern = noticia.imagen?.startsWith('pattern:')
 
+  const formatCuerpo = (text) => {
+    if (!text) return ''
+    // Si ya parece HTML (empieza con etiqueta), devolver tal cual para legibilidad de noticias antiguas
+    if (text.trim().startsWith('<')) return text
+    
+    // Dividir por doble salto de línea para crear párrafos
+    // y convertir saltos simples en <br/> para mantener la intención del usuario
+    return text
+      .split(/\n\n+/)
+      .map(para => `<p>${para.replace(/\n/g, '<br/>')}</p>`)
+      .join('')
+  }
+
   return (
     <div className="news-detail-overlay" onClick={onClose}>
       <div className="news-detail-modal" onClick={e => e.stopPropagation()}>
@@ -51,7 +64,7 @@ export default function NewsDetail({ noticia, onClose }) {
 
             <div 
               className="news-detail-content"
-              dangerouslySetInnerHTML={{ __html: noticia.cuerpo }}
+              dangerouslySetInnerHTML={{ __html: formatCuerpo(noticia.cuerpo) }}
             />
 
             {noticia.redireccionUrl && (

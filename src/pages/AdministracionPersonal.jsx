@@ -94,16 +94,68 @@ function ExternalBtn({ href, children }) {
   )
 }
 
+// ── PDF Drawer ────────────────────────────────────────────────────────────────
+function PdfDrawer({ src, title, onClose }) {
+  useEffect(() => {
+    const onKey = e => { if (e.key === 'Escape') onClose() }
+    document.addEventListener('keydown', onKey)
+    document.body.style.overflow = 'hidden'
+    return () => {
+      document.removeEventListener('keydown', onKey)
+      document.body.style.overflow = ''
+    }
+  }, [onClose])
+
+  return (
+    <div className="pdf-drawer-backdrop" onClick={onClose}>
+      <div className="pdf-drawer-panel" onClick={e => e.stopPropagation()}>
+        <div className="pdf-drawer-header">
+          <span className="pdf-drawer-title">{title}</span>
+          <button className="pdf-drawer-close" onClick={onClose} aria-label="Cerrar">✕</button>
+        </div>
+        <iframe src={src} title={title} className="pdf-drawer-iframe" />
+      </div>
+    </div>
+  )
+}
+
+// ── Smart Document Card ───────────────────────────────────────────────────────
+function SmartDocCard({ titulo, pdf, fuente, onOpenDrawer }) {
+  return (
+    <div className="ti-smart-doc-card">
+      {pdf && (
+        <div className="ti-smart-doc-preview" onClick={() => onOpenDrawer(pdf, titulo)}>
+          <div className="ti-smart-doc-icon">📄</div>
+          <div className="ti-smart-doc-hint">Ver documento</div>
+        </div>
+      )}
+      <div className="ti-smart-doc-info">
+        <p className="ti-smart-doc-title">{titulo}</p>
+        <p className="ti-smart-doc-meta">PDF · Documentación oficial</p>
+        <div className="ti-smart-doc-actions">
+          {pdf && (
+            <button className="ti-smart-doc-btn-primary" onClick={() => onOpenDrawer(pdf, titulo)}>
+              Ver documento
+            </button>
+          )}
+          {fuente && (
+            <a href={fuente} target="_blank" rel="noopener noreferrer" className="ti-smart-doc-btn-secondary">
+              Abrir original ↗
+            </a>
+          )}
+        </div>
+      </div>
+    </div>
+  )
+}
+
 // ── Section renderers ─────────────────────────────────────────────────────────
-function SecCertificados({ bloque }) {
+function SecCertificados({ bloque, onOpenDrawer }) {
   return (
     <SectionAnchor id="sec-certificados">
       <h2 className="ti-section-title">Certificados laborales</h2>
       <p className="ti-section-intro">{bloque.titulo}</p>
-      <PdfEmbed src={PDF_CERT} title="Instructivo generación de certificados" />
-      <div className="instructivo-actions">
-        <ExternalBtn href={bloque.fuente}>Abrir documento original</ExternalBtn>
-      </div>
+      <SmartDocCard titulo="Instructivo generación de certificados" pdf={PDF_CERT} fuente={bloque.fuente} onOpenDrawer={onOpenDrawer} />
     </SectionAnchor>
   )
 }
@@ -183,7 +235,7 @@ function SecPerfil({ bloqueInvitation, bloqueVideo }) {
   )
 }
 
-function SecCesantias({ bloquevideo, bloqueInstructivo }) {
+function SecCesantias({ bloquevideo, bloqueInstructivo, onOpenDrawer }) {
   const cesantiasData = [
     {
       titulo: bloqueInstructivo.titulo[0],
@@ -204,13 +256,7 @@ function SecCesantias({ bloquevideo, bloqueInstructivo }) {
 
       <div className="ti-cesantias-pair">
         {cesantiasData.map((item, i) => (
-          <div key={i} className="ti-cesantias-card">
-            <h3 className="ti-cesantias-card-title">{item.titulo}</h3>
-            <PdfEmbed src={item.pdf} title={item.titulo} />
-            <div className="instructivo-actions">
-              <ExternalBtn href={item.fuente}>Abrir documento original</ExternalBtn>
-            </div>
-          </div>
+          <SmartDocCard key={i} titulo={item.titulo} pdf={item.pdf} fuente={item.fuente} onOpenDrawer={onOpenDrawer} />
         ))}
       </div>
     </SectionAnchor>
@@ -219,21 +265,31 @@ function SecCesantias({ bloquevideo, bloqueInstructivo }) {
 
 // ── Sidebar / pill nav ────────────────────────────────────────────────────────
 function InstructivoNav({ activeId, onNav }) {
+  const activeIndex = NAV_SECTIONS.findIndex(s => s.id === activeId)
+  const progress = ((activeIndex + 1) / NAV_SECTIONS.length) * 100
+
   return (
     <nav className="ti-nav" aria-label="Secciones del instructivo">
       <p className="ti-nav-label">En esta página</p>
       <ul className="ti-nav-list">
-        {NAV_SECTIONS.map(sec => (
+        {NAV_SECTIONS.map((sec, i) => (
           <li key={sec.id}>
             <button
               className={`ti-nav-btn${activeId === sec.id ? ' ti-nav-btn--active' : ''}`}
               onClick={() => onNav(sec.id)}
             >
+              <span className="ti-nav-index">{String(i + 1).padStart(2, '0')}</span>
               {sec.label}
             </button>
           </li>
         ))}
       </ul>
+      <div className="ti-nav-progress">
+        <span className="ti-nav-progress-text">{activeIndex + 1} / {NAV_SECTIONS.length}</span>
+        <div className="ti-nav-progress-bar">
+          <div className="ti-nav-progress-fill" style={{ width: `${progress}%` }} />
+        </div>
+      </div>
     </nav>
   )
 }
@@ -259,6 +315,7 @@ function InstructivoPills({ activeId, onNav }) {
 // ── Main InstructivoTab ───────────────────────────────────────────────────────
 function InstructivoTab({ data }) {
   const [activeId, setActiveId] = useState(NAV_SECTIONS[0].id)
+  const [drawer, setDrawer] = useState(null)
   const observerRef = useRef(null)
 
   useEffect(() => {
@@ -277,11 +334,29 @@ function InstructivoTab({ data }) {
     return () => observerRef.current?.disconnect()
   }, [])
 
+  useEffect(() => {
+    const obs = new IntersectionObserver(
+      entries => entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('ti-visible')
+          obs.unobserve(entry.target)
+        }
+      }),
+      { threshold: 0.06 }
+    )
+    NAV_SECTIONS.forEach(sec => {
+      const el = document.getElementById(sec.id)
+      if (el) obs.observe(el)
+    })
+    return () => obs.disconnect()
+  }, [])
+
   function scrollTo(id) {
     const el = document.getElementById(id)
     if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' })
   }
 
+  const openDrawer = (src, title) => setDrawer({ src, title })
   const b = Object.fromEntries(data.bloques.map(b => [b.id, b]))
 
   return (
@@ -293,17 +368,14 @@ function InstructivoTab({ data }) {
         </header>
       </div>
 
-      {/* Mobile pill nav */}
       <InstructivoPills activeId={activeId} onNav={scrollTo} />
 
       <div className="section">
         <div className="container ti-layout">
-          {/* Desktop sidebar nav */}
           <InstructivoNav activeId={activeId} onNav={scrollTo} />
 
-          {/* Content */}
           <div className="ti-content">
-            <SecCertificados bloque={b['instructivo-pdf']} />
+            <SecCertificados bloque={b['instructivo-pdf']} onOpenDrawer={openDrawer} />
             <SecDetallado    bloque={b['recordatorio-uno']} />
             <SecTutoria      bloque={b['recordatorio-dos']} />
             <SecContacto     bloque={b['contacto']} />
@@ -314,10 +386,13 @@ function InstructivoTab({ data }) {
             <SecCesantias
               bloquevideo={b['cesantias-management']}
               bloqueInstructivo={b['instructivo-cesantias-management']}
+              onOpenDrawer={openDrawer}
             />
           </div>
         </div>
       </div>
+
+      {drawer && <PdfDrawer src={drawer.src} title={drawer.title} onClose={() => setDrawer(null)} />}
     </main>
   )
 }
