@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import './Login.css'
@@ -9,10 +9,11 @@ export default function Login() {
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
 
-  if (isEditor) {
-    navigate('/noticias')
-    return null
-  }
+  useEffect(() => {
+    if (isEditor) {
+      navigate('/noticias')
+    }
+  }, [isEditor, navigate])
 
   function handleSubmit(e) {
     e.preventDefault()

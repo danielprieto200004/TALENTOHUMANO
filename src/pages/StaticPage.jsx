@@ -19,19 +19,19 @@ const tipoIcon = {
 
 export default function StaticPage({ data, accentColor }) {
   return (
-    <main>
-      <div className="page-header" style={{ borderBottom: `3px solid ${accentColor}` }}>
-        <div className="container">
-          <h1 className="page-title">{data.titulo}</h1>
-          <p className="page-desc">{data.descripcion}</p>
-        </div>
+    <main className="news-page">
+      <div className="container">
+        <header className="news-header">
+          <h1 className="news-title">{data.titulo}</h1>
+          <p className="news-desc">{data.descripcion}</p>
+        </header>
       </div>
 
       <div className="section">
         <div className="container static-layout">
           {data.bloques.map((bloque, i) => (
             <div key={bloque.id} className="static-bloque">
-              <div className="static-bloque-num" style={{ color: accentColor }}>
+              <div className="static-bloque-num">
                 {String(i + 1).padStart(2, '0')}
               </div>
               <div className="static-bloque-body">

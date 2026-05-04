@@ -1,57 +1,63 @@
 .section-card {
   display: flex;
   align-items: center;
-  gap: 16px;
-  padding: 20px;
+  gap: 20px;
+  padding: 24px;
   background: #fff;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
+  border: 1px solid #f1f5f9;
+  border-radius: 12px;
   text-decoration: none;
-  transition: box-shadow 0.15s, border-color 0.15s;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .section-card:hover {
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-  border-color: #d1d5db;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.04);
+  border-color: #e2e8f0;
 }
 
 .section-card-icon {
-  width: 44px;
-  height: 44px;
-  border-radius: 10px;
+  width: 52px;
+  height: 52px;
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  transition: transform 0.3s ease;
+}
+
+.section-card:hover .section-card-icon {
+  transform: rotate(5deg) scale(1.1);
 }
 
 .section-card-body {
   flex: 1;
-  min-width: 0;
 }
 
 .section-card-title {
   margin: 0 0 4px;
-  font-size: 0.92rem;
+  font-size: 1.1rem;
   font-weight: 700;
-  color: #111827;
+  color: #0f172a;
 }
 
 .section-card-desc {
   margin: 0;
-  font-size: 0.82rem;
-  color: #6b7280;
-  line-height: 1.5;
+  font-size: 0.9rem;
+  color: #64748b;
+  line-height: 1.4;
 }
 
 .section-card-arrow {
-  font-size: 1rem;
+  font-size: 1.2rem;
   color: #9ca3af;
-  flex-shrink: 0;
-  transition: transform 0.12s, color 0.12s;
+  opacity: 0.3;
+  transition: all 0.2s;
 }
 
 .section-card:hover .section-card-arrow {
-  transform: translateX(3px);
-  color: #374151;
+  opacity: 1;
+  color: #0f172a;
+  transform: translateX(4px);
 }

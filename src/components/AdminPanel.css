@@ -2,68 +2,77 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 16px;
-  background: #fff;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
-  padding: 14px 18px;
-  margin-bottom: 24px;
-  flex-wrap: wrap;
+  gap: 20px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 16px 24px;
+  margin-bottom: 30px;
+  backdrop-filter: blur(5px);
 }
 
 .admin-panel-left {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 15px;
 }
 
 .admin-panel-label {
-  font-size: 0.82rem;
-  font-weight: 700;
-  color: #92400e;
-  background: #fef3c7;
-  padding: 3px 9px;
-  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: var(--navy);
+  background: var(--gold);
+  padding: 4px 12px;
+  border-radius: 50px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 .admin-panel-count {
-  font-size: 0.82rem;
-  color: #6b7280;
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.6);
+  font-weight: 600;
 }
 
 .admin-panel-actions {
   display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
+  gap: 12px;
 }
 
 .admin-btn {
-  font-family: inherit;
-  font-size: 0.82rem;
-  font-weight: 500;
-  padding: 6px 14px;
-  border-radius: 6px;
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  font-weight: 700;
+  padding: 10px 20px;
+  border-radius: 10px;
   cursor: pointer;
-  transition: background 0.12s, border-color 0.12s;
+  transition: all 0.2s;
+  border: none;
 }
 
 .admin-btn-ghost {
-  background: none;
-  border: 1px solid #d1d5db;
-  color: #374151;
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .admin-btn-ghost:hover {
-  background: #f3f4f6;
+  background: rgba(255, 255, 255, 0.1);
+  border-color: #fff;
 }
 
 .admin-btn-primary {
-  background: #003da5;
-  border: none;
-  color: #fff;
-  font-weight: 600;
+  background: var(--gold);
+  color: var(--navy);
 }
 
 .admin-btn-primary:hover {
-  background: #00298a;
+  background: #fff;
+  transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+  .admin-panel { flex-direction: column; align-items: stretch; text-align: center; }
+  .admin-panel-left { justify-content: center; }
+  .admin-panel-actions { justify-content: center; }
 }

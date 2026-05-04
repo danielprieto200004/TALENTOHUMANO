@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import { CATEGORIAS } from '../data/defaultNews'
 import './NewsEditor.css'
 
-function resizeImage(file, maxWidth = 900) {
+function resizeImage(file, maxWidth = 1200) {
   return new Promise((resolve) => {
     const img = new Image()
     const url = URL.createObjectURL(file)
@@ -13,10 +13,18 @@ function resizeImage(file, maxWidth = 900) {
       canvas.height = img.height * scale
       canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height)
       URL.revokeObjectURL(url)
-      resolve(canvas.toDataURL('image/jpeg', 0.8))
+      resolve(canvas.toDataURL('image/jpeg', 0.85))
     }
     img.src = url
   })
+}
+
+// Get local YYYY-MM-DD
+function getLocalDate() {
+  const d = new Date()
+  const offset = d.getTimezoneOffset()
+  const local = new Date(d.getTime() - (offset * 60 * 1000))
+  return local.toISOString().split('T')[0]
 }
 
 const empty = {
@@ -24,10 +32,13 @@ const empty = {
   resumen: '',
   cuerpo: '',
   categoria: 'General',
-  imagen: null,
-  fechaPublicacion: new Date().toISOString().slice(0, 10),
+  imagen: 'pattern:1',
+  fechaPublicacion: getLocalDate(),
   publicada: true,
+  redireccionUrl: '',
 }
+
+const PATTERNS = ['pattern:1', 'pattern:2', 'pattern:3']
 
 export default function NewsEditor({ noticia, onSave, onClose }) {
   const [form, setForm] = useState(empty)
@@ -37,8 +48,9 @@ export default function NewsEditor({ noticia, onSave, onClose }) {
   useEffect(() => {
     if (noticia) {
       setForm({
+        ...empty, // Use defaults for any missing fields
         ...noticia,
-        fechaPublicacion: noticia.fechaPublicacion.slice(0, 10),
+        fechaPublicacion: noticia.fechaPublicacion ? noticia.fechaPublicacion.slice(0, 10) : getLocalDate(),
       })
     } else {
       setForm(empty)
@@ -54,23 +66,42 @@ export default function NewsEditor({ noticia, onSave, onClose }) {
     const file = e.target.files[0]
     if (!file) return
     setLoadingImg(true)
-    const base64 = await resizeImage(file)
-    setForm((prev) => ({ ...prev, imagen: base64 }))
-    setLoadingImg(false)
+
+    try {
+      const base64 = await resizeImage(file)
+      const res = await fetch('/api/upload-image', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: file.name, data: base64 })
+      })
+      const { url } = await res.json()
+      setForm((prev) => ({ ...prev, imagen: url }))
+    } catch (err) {
+      console.error('Error uploading image:', err)
+      alert('Error al subir la imagen')
+    } finally {
+      setLoadingImg(false)
+    }
   }
 
-  function removeImage() {
-    setForm((prev) => ({ ...prev, imagen: null }))
-    imgInputRef.current.value = ''
+  function selectPattern(pattern) {
+    setForm((prev) => ({ ...prev, imagen: pattern }))
+    if (imgInputRef.current) imgInputRef.current.value = ''
   }
 
   function handleSubmit(e) {
     e.preventDefault()
+    // To avoid timezone shifting to previous day, we treat the date as local noon
+    const [y, m, d] = form.fechaPublicacion.split('-')
+    const finalDate = new Date(y, m - 1, d, 12, 0, 0).toISOString()
+
     onSave({
       ...form,
-      fechaPublicacion: new Date(form.fechaPublicacion).toISOString(),
+      fechaPublicacion: finalDate,
     })
   }
+
+  const isPattern = form.imagen?.startsWith('pattern:')
 
   return (
     <div className="editor-overlay" onClick={(e) => e.target === e.currentTarget && onClose()}>
@@ -105,13 +136,24 @@ export default function NewsEditor({ noticia, onSave, onClose }) {
           </div>
 
           <div className="field">
-            <label>Contenido completo</label>
+            <label>Contenido completo (Cuerpo)</label>
             <textarea
               name="cuerpo"
               value={form.cuerpo}
               onChange={handleChange}
               rows={6}
-              placeholder="Puedes usar HTML básico: <p>, <ul>, <li>, <strong>"
+              placeholder="Escribe el contenido de la noticia"
+            />
+            <p className="field-hint">Usa doble salto de línea para crear párrafos.</p>
+          </div>
+
+          <div className="field">
+            <label>URL para redireccionar (Opcional)</label>
+            <input
+              name="redireccionUrl"
+              value={form.redireccionUrl}
+              onChange={handleChange}
+              placeholder="https://ejemplo.com/mas-info"
             />
           </div>
 
@@ -138,27 +180,41 @@ export default function NewsEditor({ noticia, onSave, onClose }) {
           </div>
 
           <div className="field">
-            <label>Imagen</label>
-            {form.imagen ? (
-              <div className="img-preview">
-                <img src={form.imagen} alt="preview" />
-                <button type="button" className="img-remove" onClick={removeImage}>
-                  Quitar imagen
-                </button>
-              </div>
-            ) : (
-              <label className="img-upload-btn">
-                {loadingImg ? 'Procesando...' : 'Seleccionar imagen'}
-                <input
-                  ref={imgInputRef}
-                  type="file"
-                  accept="image/*"
-                  onChange={handleImageChange}
-                  style={{ display: 'none' }}
-                />
-              </label>
-            )}
-            <span className="field-hint">JPG, PNG o WebP. Se comprime automáticamente.</span>
+            <label>Imagen o Estilo Visual</label>
+            <div className="image-management">
+              {!isPattern && form.imagen ? (
+                <div className="img-preview">
+                  <img src={form.imagen} alt="preview" />
+                  <button type="button" className="img-remove" onClick={() => selectPattern('pattern:1')}>
+                    Quitar imagen y usar estilo
+                  </button>
+                </div>
+              ) : (
+                <div className="pattern-setup">
+                  <label className="img-upload-btn">
+                    {loadingImg ? 'Subiendo...' : 'Subir imagen desde PC'}
+                    <input
+                      ref={imgInputRef}
+                      type="file"
+                      accept="image/*"
+                      onChange={handleImageChange}
+                      style={{ display: 'none' }}
+                    />
+                  </label>
+
+                  <div className="field-hint" style={{ margin: '12px 0 6px' }}>O elige un estilo abstracto:</div>
+                  <div className="pattern-selector">
+                    {PATTERNS.map((p) => (
+                      <div
+                        key={p}
+                        className={`pattern-option news-${p.replace(':', '-')} ${form.imagen === p ? 'pattern-option--selected' : ''}`}
+                        onClick={() => selectPattern(p)}
+                      />
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
 
           <label className="field-check">
@@ -175,7 +231,7 @@ export default function NewsEditor({ noticia, onSave, onClose }) {
             <button type="button" className="btn-cancel" onClick={onClose}>
               Cancelar
             </button>
-            <button type="submit" className="btn-save">
+            <button type="submit" className="btn-save" disabled={loadingImg}>
               {noticia ? 'Guardar cambios' : 'Publicar noticia'}
             </button>
           </div>

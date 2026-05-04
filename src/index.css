@@ -1,11 +1,106 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@700;800&display=swap');
+
+:root {
+  --font-body: 'Inter', system-ui, sans-serif;
+  --font-heading: 'Montserrat', sans-serif;
+  --navy: #000F26;
+  --coastal: #0C82B2;
+  --gold: #FBBC09;
+}
+
 * {
   box-sizing: border-box;
 }
 
 body {
   margin: 0;
-  font-family: 'Inter', 'Segoe UI', sans-serif;
-  background: #f5f7fa;
-  color: #111827;
+  font-family: var(--font-body);
+  background: #f8fafc;
+  color: #0f172a;
   -webkit-font-smoothing: antialiased;
 }
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  margin: 0;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* Global Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s;
+  cursor: pointer;
+  border: none;
+  font-family: inherit;
+  font-size: 0.9rem;
+}
+
+/* News Card Abstract Patterns (Institutional Palette) */
+.news-pattern-1 {
+  /* Navy & Coastal Blue focus */
+  background: radial-gradient(circle at 2px 2px, rgba(12, 130, 178, 0.2) 1px, transparent 0), 
+              linear-gradient(135deg, #000F26 0%, #0C82B2 100%);
+  background-size: 20px 20px, 100% 100%;
+}
+.news-pattern-2 {
+  /* Coastal Blue focus */
+  background: repeating-linear-gradient(45deg, rgba(0, 15, 38, 0.05) 0px, rgba(0, 15, 38, 0.05) 2px, transparent 2px, transparent 10px),
+              linear-gradient(135deg, #0C82B2 0%, #000F26 100%);
+}
+.news-pattern-3 {
+  /* Muted Gold / Amber focus - more harmonious with Navy */
+  background: radial-gradient(at 0% 0%, rgba(255, 255, 255, 0.15) 0, transparent 50%), 
+              radial-gradient(at 100% 100%, rgba(0, 0, 0, 0.1) 0, transparent 50%),
+              linear-gradient(135deg, #B8860B 0%, #854D0E 100%); 
+}
+/* Global News/Static Page Theme (Dark Creative) */
+.news-page {
+  min-height: 100vh;
+  background: #000a1a !important; /* Force dark background */
+  color: #fff;
+  padding: 100px 0; /* Padding for sticky navbar */
+}
+
+.news-page .section {
+  background: transparent !important;
+  padding: 40px 0;
+}
+
+.news-page .container {
+  width: min(1200px, 92%);
+}
+
+.news-header {
+  margin-bottom: 60px;
+}
+
+.news-title {
+  font-family: var(--font-heading);
+  font-size: clamp(2.5rem, 6vw, 4rem);
+  font-weight: 800;
+  line-height: 1.1;
+  color: #fff;
+  letter-spacing: -0.04em;
+  margin-bottom: 20px;
+}
+
+.news-desc {
+  font-size: 1.15rem;
+  color: rgba(255, 255, 255, 0.6);
+  max-width: 700px;
+}
+
+.text-blue { color: var(--coastal); }
+.text-gold { color: var(--gold); }

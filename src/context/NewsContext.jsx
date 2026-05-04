@@ -1,44 +1,70 @@
 import { createContext, useContext, useReducer, useEffect } from 'react'
-import { loadNews, saveNews } from '../hooks/useNews'
 
 const NewsContext = createContext(null)
 
 function reducer(state, action) {
   switch (action.type) {
+    case 'SET':
+      return action.news
     case 'ADD':
       return [action.news, ...state]
     case 'UPDATE':
       return state.map((n) => (n.id === action.news.id ? action.news : n))
     case 'DELETE':
       return state.filter((n) => n.id !== action.id)
-    case 'IMPORT':
-      return action.news
     default:
       return state
   }
 }
 
 export function NewsProvider({ children }) {
-  const [news, dispatch] = useReducer(reducer, null, loadNews)
+  const [news, dispatch] = useReducer(reducer, [])
 
+  // Load news from API on mount
   useEffect(() => {
-    saveNews(news)
-  }, [news])
+    fetch('/api/news')
+      .then((res) => res.json())
+      .then((data) => {
+        dispatch({ type: 'SET', news: data })
+      })
+      .catch((err) => console.error('Error loading news:', err))
+  }, [])
 
-  function addNews(noticia) {
-    dispatch({ type: 'ADD', news: { ...noticia, id: crypto.randomUUID() } })
+  // Helper to save entire news list to API
+  const persist = async (updatedNews) => {
+    try {
+      await fetch('/api/news', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updatedNews),
+      })
+    } catch (err) {
+      console.error('Error saving news:', err)
+    }
   }
 
-  function updateNews(noticia) {
+  const addNews = async (noticia) => {
+    const newNoticia = { ...noticia, id: crypto.randomUUID() }
+    const newState = [newNoticia, ...news]
+    dispatch({ type: 'ADD', news: newNoticia })
+    await persist(newState)
+  }
+
+  const updateNews = async (noticia) => {
+    const newState = news.map((n) => (n.id === noticia.id ? noticia : n))
     dispatch({ type: 'UPDATE', news: noticia })
+    await persist(newState)
   }
 
-  function deleteNews(id) {
+  const deleteNews = async (id) => {
+    const newState = news.filter((n) => n.id !== id)
     dispatch({ type: 'DELETE', id })
+    await persist(newState)
   }
 
-  function importNews(data) {
-    dispatch({ type: 'IMPORT', news: data })
+  const importNews = async (data) => {
+    dispatch({ type: 'SET', news: data })
+    await persist(data)
   }
 
   return (

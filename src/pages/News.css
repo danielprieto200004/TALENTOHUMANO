@@ -1,40 +1,104 @@
+.news-page {
+  min-height: 100vh;
+  background: #000a1a; /* Very dark navy background */
+  color: #fff;
+  padding: 60px 0 100px;
+}
+
+.news-header {
+  margin-bottom: 50px;
+}
+
+.news-title {
+  font-size: 3rem;
+  font-weight: 800;
+  margin-bottom: 30px;
+  letter-spacing: -0.04em;
+}
+
+/* Filters - Dark Theme */
 .filtros {
   display: flex;
-  gap: 8px;
+  gap: 12px;
   flex-wrap: wrap;
-  margin-bottom: 24px;
+  margin-bottom: 40px;
+  padding: 8px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 50px;
+  width: fit-content;
+  border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .filtro-btn {
-  font-family: inherit;
-  font-size: 0.8rem;
-  font-weight: 500;
-  padding: 5px 13px;
-  border-radius: 20px;
-  border: 1px solid #e5e7eb;
-  background: none;
-  color: #374151;
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 8px 20px;
+  border-radius: 40px;
+  border: none;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.6);
   cursor: pointer;
-  transition: border-color 0.12s, color 0.12s, background 0.12s;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .filtro-btn:hover {
-  background: #f3f4f6;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.05);
 }
 
 .filtro-btn.active {
-  background: #f3f4f6;
-  font-weight: 600;
+  background: var(--coastal);
+  color: #fff;
+  box-shadow: 0 4px 15px rgba(12, 130, 178, 0.3);
 }
 
-.news-list-full {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
+/* Grid logic remains same but visual change */
+.news-gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 30px;
+}
+
+@media (min-width: 1024px) {
+  .news-gallery-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .news-card--hero { grid-column: span 2; }
+  .news-card--banner { grid-column: 1 / -1; }
 }
 
 .empty-msg {
-  color: #9ca3af;
-  font-size: 0.9rem;
-  padding: 24px 0;
+  text-align: center;
+  padding: 100px 0;
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 1.1rem;
+}
+
+/* Editor specific actions inside News page */
+.news-editor-top {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 40px;
+}
+
+.btn-add-news {
+  background: var(--gold);
+  color: var(--navy);
+  padding: 14px 28px;
+  border-radius: 12px;
+  font-weight: 800;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: all 0.3s;
+  border: none;
+  cursor: pointer;
+}
+
+.btn-add-news:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px rgba(251, 188, 9, 0.3);
+  background: #fff;
 }
