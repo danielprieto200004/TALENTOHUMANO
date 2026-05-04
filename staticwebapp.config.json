@@ -1,0 +1,27 @@
+{
+  "auth": {
+    "identityProviders": {
+      "azureActiveDirectory": {
+        "registration": {
+          "openIdConnectConfiguration": {
+            "wellKnownOpenIdConfiguration": "https://login.microsoftonline.com/uniminuto.edu/v2.0/.well-known/openid-configuration"
+          }
+        }
+      }
+    }
+  },
+  "routes": [
+    {
+      "route": "/*",
+      "allowedRoles": [
+        "authenticated"
+      ]
+    }
+  ],
+  "responseOverrides": {
+    "401": {
+      "statusCode": 302,
+      "redirect": "/.auth/login/aad"
+    }
+  }
+}
