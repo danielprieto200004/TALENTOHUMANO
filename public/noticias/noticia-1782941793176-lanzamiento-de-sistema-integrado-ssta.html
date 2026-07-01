@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <!-- 
+    ==================================================================================
+    INSTRUCCIONES PARA LA IA / GENERADOR DE CONTENIDO:
+    Este archivo está estructurado de manera que el analizador automático de la intranet
+    de Talento Humano extraiga los metadatos de forma automática.
+    
+    Por favor, cuando edites o generes contenido para esta plantilla, mantén los siguientes campos:
+    
+    1. TÍTULO DE LA NOTICIA:
+       - Debe estar dentro de la etiqueta <title> (abajo).
+       - Y opcionalmente dentro del elemento <h1 class="hero-title"> o <h1 class="modern-title hero-title">.
+       
+    2. CATEGORÍA:
+       - Debe ir en el meta tag: <meta name="category" content="CategoríaAquí">
+       - Opcionalmente en una clase "badge".
+       - Categorías válidas en el sistema: "General", "Salud y Seguridad", "Bienestar".
+       
+    3. RESUMEN / EXCERPT:
+       - Debe ir en el meta tag: <meta name="description" content="Resumen corto aquí">
+       - O dentro de la clase "hero-excerpt".
+       - Este texto es el que aparecerá en la tarjeta exterior de la sección de noticias.
+    ==================================================================================
+  -->
+  
+  <title>Lanzamiento de Sistema Integrado SSTA</title>
+  <meta name="category" content="Salud y Seguridad" />
+  <meta name="description" content="Guía detallada para la adopción del nuevo sistema de reporte de incidentes y el decálogo de autocuidado institucional." />
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Lora:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --color-primary:    #000F26;   /* Navy Principal */
+      --color-accent:     #0C82B2;   /* Azul Acento */
+      --color-accent-lt:  #E3F2FD;   /* Azul muy claro */
+      --color-dark:       #1E293B;   /* Gris Oscuro */
+      --color-mid:        #64748B;   /* Gris Medio */
+      --color-bg:         #020617;   /* Fondo Noche Oscuro */
+      --color-card:       #0B1329;   /* Fondo de Tarjeta */
+      --color-border:     rgba(12, 130, 178, 0.2);
+      --color-white:      #FFFFFF;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: var(--color-bg);
+      color: #94A3B8;
+      line-height: 1.75;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ─── ANIMACIONES ──────────────────────────────────────────── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(32px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50%       { opacity: 0.4; transform: scale(0.85); }
+    }
+
+    .anim-1 { animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) both; }
+    .anim-2 { animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.12s both; }
+    .anim-3 { animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.24s both; }
+    .anim-4 { animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.36s both; }
+
+    .wrapper {
+      width: 100%;
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* ─── HERO SECTION ───────────────────────────────────────────── */
+    .hero {
+      background: var(--color-primary);
+      color: var(--color-white);
+      padding: 80px 0 64px;
+      position: relative;
+      overflow: hidden;
+      border-bottom: 2px solid var(--color-border);
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(circle, rgba(12, 130, 178, 0.15) 1px, transparent 1px);
+      background-size: 32px 32px;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .hero::after {
+      content: '';
+      position: absolute;
+      top: -50px; right: -50px;
+      width: 300px; height: 300px;
+      background: radial-gradient(circle, rgba(56, 189, 248, 0.25) 0%, transparent 70%);
+      pointer-events: none;
+      filter: blur(40px);
+      z-index: 1;
+    }
+
+    .hero-meta {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      padding: 6px 14px;
+      border-radius: 999px;
+      border: 1px solid var(--color-border);
+      color: #38BDF8;
+      background: rgba(12, 130, 178, 0.1);
+    }
+
+    .badge-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: #38BDF8;
+      animation: pulse-dot 2s ease-in-out infinite;
+    }
+
+    .hero-date {
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.5);
+      font-weight: 500;
+    }
+
+    .hero-title {
+      font-size: clamp(32px, 6vw, 50px);
+      font-weight: 900;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      margin-bottom: 20px;
+    }
+
+    .hero-title span {
+      background: linear-gradient(90deg, #38BDF8, #0C82B2);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-excerpt {
+      font-family: 'Lora', serif;
+      font-size: 19px;
+      line-height: 1.7;
+      color: #94A3B8;
+      max-width: 680px;
+      margin-bottom: 28px;
+    }
+
+    /* ─── CONTENIDO ──────────────────────────────────────────────── */
+    .article-body {
+      padding: 64px 0;
+    }
+
+    .content-image {
+      width: 100%;
+      height: auto;
+      border-radius: 20px;
+      margin-bottom: 48px;
+      border: 1px solid var(--color-border);
+      box-shadow: 0 20px 50px rgba(0, 15, 38, 0.4);
+      object-fit: cover;
+      transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .content-image:hover {
+      transform: translateY(-4px) scale(1.01);
+      box-shadow: 0 30px 60px rgba(12, 130, 178, 0.25);
+    }
+
+    .intro-block {
+      background: rgba(11, 19, 41, 0.45);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--color-border);
+      border-radius: 20px;
+      padding: 32px;
+      margin-bottom: 48px;
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+    }
+
+    .section-title {
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--color-white);
+      margin: 40px 0 16px 0;
+      letter-spacing: -0.01em;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .section-title::before {
+      content: '';
+      width: 4px; height: 24px;
+      background: #38BDF8;
+      border-radius: 2px;
+      display: block;
+    }
+
+    /* ─── STAT CARDS ────────────────────────────────────────────── */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 16px;
+      margin: 32px 0;
+    }
+
+    .stat-card {
+      background: rgba(11, 19, 41, 0.4);
+      border: 1px solid var(--color-border);
+      border-radius: 16px;
+      padding: 24px;
+      text-align: center;
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .stat-card:hover {
+      transform: translateY(-6px);
+      border-color: rgba(58, 189, 248, 0.6);
+      box-shadow: 0 16px 36px rgba(56, 189, 248, 0.15);
+      background: rgba(11, 19, 41, 0.7);
+    }
+
+    .stat-num {
+      font-size: 38px;
+      font-weight: 900;
+      color: #38BDF8;
+      margin-bottom: 6px;
+      text-shadow: 0 0 10px rgba(56, 189, 248, 0.3);
+    }
+
+    .stat-lbl {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: #64748B;
+      letter-spacing: 0.1em;
+    }
+
+    /* ─── PROGRESS BARS ─────────────────────────────────────────── */
+    .progress-box {
+      background: var(--color-card);
+      border: 1px solid var(--color-border);
+      padding: 24px;
+      border-radius: 16px;
+      margin: 32px 0;
+    }
+
+    .progress-item {
+      margin-bottom: 16px;
+    }
+
+    .progress-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--color-white);
+      margin-bottom: 6px;
+    }
+
+    .progress-bar {
+      height: 8px;
+      background: rgba(255,255,255,0.05);
+      border-radius: 99px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #0c82b2, #38bdf8);
+      border-radius: 99px;
+    }
+
+    /* ─── TABLA ────────────────────────────────────────────────── */
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 32px 0;
+      font-size: 14px;
+    }
+
+    .data-table th {
+      background: rgba(12, 130, 178, 0.1);
+      color: var(--color-white);
+      text-align: left;
+      padding: 12px 16px;
+      border-bottom: 2px solid var(--color-border);
+    }
+
+    .data-table td {
+      padding: 12px 16px;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .data-table tr:hover td {
+      background: rgba(255,255,255,0.02);
+    }
+  </style>
+</head>
+<body>
+
+  <section class="hero">
+    <div class="wrapper">
+      <div class="hero-meta anim-1">
+        <span class="badge">
+          <span class="badge-dot"></span>
+          Salud y Seguridad
+        </span>
+        <span class="hero-date">Guía de Autocuidado</span>
+      </div>
+
+      <h1 class="hero-title anim-2">
+        Decálogo de Seguridad y <span>Salud en el Trabajo</span>
+      </h1>
+
+      <p class="hero-excerpt anim-3">
+        Descubre las normas fundamentales, reportes de incidentes virtuales y los procesos de capacitación obligatoria para el año en curso.
+      </p>
+    </div>
+  </section>
+
+  <main class="article-body">
+    <div class="wrapper">
+      <div class="intro-block anim-4">
+        <p>Este artículo sirve como tu panel de control de SSTA. A continuación, encontrarás estadísticas actualizadas de participación y capacitaciones, así como la tabla de prioridades para el próximo mes.</p>
+      </div>
+
+      <img src="https://images.unsplash.com/photo-1497215728101-856f4ea42174?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" alt="Oficina Moderna" class="content-image anim-4" />
+
+      <h2 class="section-title">Estadísticas de Adopción</h2>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-num">95%</div>
+          <div class="stat-lbl">Sedes Evaluadas</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">2.4k</div>
+          <div class="stat-lbl">Colaboradores</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">0</div>
+          <div class="stat-lbl">Incidentes Graves</div>
+        </div>
+      </div>
+
+      <h2 class="section-title">Metas y Progreso SSTA</h2>
+      <div class="progress-box">
+        <div class="progress-item">
+          <div class="progress-label">
+            <span>Simulacros de Evacuación</span>
+            <span>90%</span>
+          </div>
+          <div class="progress-bar"><div class="progress-fill" style="width: 90%;"></div></div>
+        </div>
+        <div class="progress-item" style="margin-top: 16px;">
+          <div class="progress-label">
+            <span>Capacitaciones Ergonomía</span>
+            <span>65%</span>
+          </div>
+          <div class="progress-bar"><div class="progress-fill" style="width: 65%;"></div></div>
+        </div>
+      </div>
+
+      <h2 class="section-title">Cronograma de Evaluaciones</h2>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Módulo</th>
+            <th>Fecha Límite</th>
+            <th>Prioridad</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Evaluación de Riesgo Postural</td>
+            <td>15 de Julio</td>
+            <td style="color:#f87171; font-weight:700;">Alta</td>
+          </tr>
+          <tr>
+            <td>Higiene y Salud Ocupacional</td>
+            <td>30 de Agosto</td>
+            <td style="color:#fbbf24; font-weight:700;">Media</td>
+          </tr>
+          <tr>
+            <td>Plan de Emergencias</td>
+            <td>10 de Septiembre</td>
+            <td style="color:#34d399; font-weight:700;">Baja</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
+
+  <script>
+    function reportHeight() {
+      window.parent.postMessage({
+        type: 'symbiotic-iframe-height',
+        height: document.body.scrollHeight
+      }, '*');
+    }
+    window.addEventListener('load', reportHeight);
+    window.addEventListener('resize', reportHeight);
+    if (window.ResizeObserver) {
+      new ResizeObserver(reportHeight).observe(document.body);
+    }
+  </script>
+</body>
+</html>
