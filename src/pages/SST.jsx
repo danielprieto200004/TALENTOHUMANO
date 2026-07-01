@@ -197,18 +197,13 @@ function ProfBtn({ href, children }) {
 }
 
 function ProfVideoEmbed({ url, title }) {
-  if (!url) return null
+  const embedUrl = youtubeEmbedUrl(url)
+  if (!embedUrl) return null
   return (
-    <div className="prof-video-wrapper" style={{ padding: '40px 20px', textAlign: 'center', background: '#F8FAFC', borderRadius: '12px', border: '1px solid #E2E8F0', marginBottom: '24px' }}>
-      <h4 style={{ marginBottom: '16px', color: '#0F172A' }}>{title || 'Ver video en YouTube'}</h4>
-      <a 
-        href={url} 
-        target="_blank" 
-        rel="noopener noreferrer"
-        style={{ display: 'inline-block', backgroundColor: '#EF4444', color: 'white', padding: '12px 24px', borderRadius: '8px', textDecoration: 'none', fontWeight: 'bold' }}
-      >
-        ▶ Reproducir en YouTube
-      </a>
+    <div className="prof-video-wrapper">
+      <iframe src={embedUrl} title={title}
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowFullScreen className="prof-video" />
     </div>
   )
 }
