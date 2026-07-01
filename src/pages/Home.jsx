@@ -14,7 +14,7 @@ const secciones = [
   {
     slug: 'bienestar',
     titulo: 'Bienestar y Desarrollo',
-    descripcion: 'Programas de bienestar, deporte, cultura y apoyo psicosocial.',
+    descripcion: 'Desarrollo integral del talento humano (cursos de UNICORPORATIVA), Bienestar Institucional (beneficios) e Identidad misional (proceso de desempeño).',
     color: '#0C82B2', // Coastal Blue
   },
   {
@@ -79,7 +79,7 @@ export default function Home() {
 
           <div className="news-v2-grid">
             {recientes.map((n, i) => (
-              <Link to="/noticias" key={n.id} className={`news-v2-card card-size-${i}`}>
+              <Link to={`/noticias?id=${n.id}`} key={n.id} className={`news-v2-card card-size-${i}`}>
                 <div className="news-v2-card-img-box">
                   {n.imagen?.startsWith('pattern:') ? (
                     <div className={`news-v2-card-pattern news-${n.imagen.replace(':', '-')}`} />

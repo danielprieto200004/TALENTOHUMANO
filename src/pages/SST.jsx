@@ -8,14 +8,14 @@ import { sstData, sstTab2Data } from '../data/staticSections'
 import gestEmergenciasImg     from '../assets/img/gestion-emergencias.jpg'
 import invitacionBrigadistaImg from '../assets/img/invitation-brigadista.jpg'
 import encuentroBrigadasImg   from '../assets/img/encuentro-brigadas-uniminuto.jpg'
-import gestionRiesgosImg      from '../assets/img/gestion-riesgos.jpg'
-import gestionAmbientalImg    from '../assets/img/gestion-ambiental.jpg'
-import saludImg               from '../assets/img/salud.jpg'
+import gestionRiesgosImg      from '../assets/img/gestion_riesgos.png'
+import gestionAmbientalImg    from '../assets/img/gestion_ambiental.png'
+import saludImg               from '../assets/img/salud.png'
 import saludRespirImg         from '../assets/img/salud-enfermedades-respiratorias.jpg'
 import saludGastroImg         from '../assets/img/salud-enfermedades-gastrointestinales.jpg'
-import induccionImg           from '../assets/img/induccion-reinduccion.jpg'
+import induccionImg           from '../assets/img/intreduccion_reinduccion.png'
 import induccionPrevImg       from '../assets/img/induccion-reinduccion-previsualizacion.png'
-import salidasCampoImg        from '../assets/img/salidas-a-campo.jpg'
+import salidasCampoImg        from '../assets/img/salidas_campo.png'
 import salidasVideoImg        from '../assets/img/salidas-a-campo-video.png'
 
 import './SST.css'
@@ -270,10 +270,32 @@ function SecResolucion({ bRes, bRoles, bCopasst, onOpenDrawer }) {
 }
 
 function SecContacto({ b }) {
-  const contacts = b.responsable.map((rol, i) => ({
-    rol,
-    correo: b.correos[i],
-  }))
+  const getContactName = (email) => {
+    if (email.startsWith('paula.bojaca')) return 'PAULA BOJACÁ'
+    if (email.startsWith('monica.gomez')) return 'MÓNICA GÓMEZ S.'
+    if (email.startsWith('sergio.bermudez')) return 'SERGIO BERMÚDEZ R.'
+    return email.split('@')[0].replace(/\./g, ' ').toUpperCase()
+  }
+
+  const getInitials = (name) => {
+    const parts = name.trim().split(/\s+/)
+    if (parts.length >= 2) {
+      return (parts[0][0] + parts[1][0]).toUpperCase()
+    }
+    return parts[0] ? parts[0][0].toUpperCase() : ''
+  }
+
+  const contacts = b.responsable.map((rol, i) => {
+    const email = b.correos[i]
+    const nombre = getContactName(email)
+    return {
+      nombre,
+      rol,
+      correo: email,
+      inicial: getInitials(nombre),
+    }
+  })
+
   return (
     <ProfSection id="sec-contacto">
       <ProfTitle>{b.titulo}</ProfTitle>
@@ -281,11 +303,13 @@ function SecContacto({ b }) {
         {contacts.map((c) => (
           <div key={c.correo} className="prof-contact-card">
             <div className="prof-contact-avatar">
-              {c.correo[0].toUpperCase()}
+              {c.inicial}
             </div>
-            <p className="prof-contact-rol">{c.rol}</p>
-            <a href={`mailto:${c.correo}`} className="prof-contact-email">
-              {c.correo}
+            <h3 className="prof-contact-name">{c.nombre}</h3>
+            <p className="prof-contact-role">{c.rol}</p>
+            <span className="prof-contact-email-text">{c.correo}</span>
+            <a href={`mailto:${c.correo}`} className="prof-contact-mail-btn">
+              Enviar correo →
             </a>
           </div>
         ))}
@@ -460,11 +484,10 @@ function SecInduccion({ b }) {
   return (
     <ProfSection id="sec-induccion">
       <ProfTitle>{b.titulo}</ProfTitle>
-      <ProfBanner src={induccionImg} alt="Inducción y reinducción" />
-      {b.nota && <ProfCallout type="info">{b.nota}</ProfCallout>}
       <div className="prof-preview-img-wrap">
         <img src={induccionPrevImg} alt="Vista previa inducción" className="prof-preview-img" />
       </div>
+      {b.nota && <ProfCallout type="info">{b.nota}</ProfCallout>}
       <ProfActions>
         <ProfBtn href={b.fuente}>Abrir documento</ProfBtn>
       </ProfActions>
@@ -549,12 +572,13 @@ function ProfPills({ activeId, onNav }) {
   return (
     <div className="prof-pills-bar">
       <div className="prof-pills-inner">
-        {NAV_SECTIONS.map(sec => (
+        {NAV_SECTIONS.map((sec, i) => (
           <button
             key={sec.id}
             className={`prof-pill${activeId === sec.id ? ' prof-pill--active' : ''}`}
             onClick={() => onNav(sec.id)}
           >
+            <span className="prof-pill-index">{String(i + 1).padStart(2, '0')}</span>
             {sec.label}
           </button>
         ))}
@@ -577,7 +601,7 @@ function ProfundizacionTab({ data }) {
           if (entry.isIntersecting) setActiveId(entry.target.id)
         })
       },
-      { rootMargin: '-15% 0px -70% 0px', threshold: 0 }
+      { rootMargin: '-100px 0px -50% 0px', threshold: 0 }
     )
     NAV_SECTIONS.forEach(sec => {
       const el = document.getElementById(sec.id)
@@ -620,9 +644,7 @@ function ProfundizacionTab({ data }) {
         </header>
       </div>
 
-      <ProfPills activeId={activeId} onNav={scrollTo} />
-
-      <div className="section">
+      <div className="section" style={{ paddingTop: '40px' }}>
         <div className="container prof-layout">
           <ProfNav activeId={activeId} onNav={scrollTo} />
           <div className="prof-content">
@@ -648,29 +670,30 @@ function ProfundizacionTab({ data }) {
 
 // ── Tabs wrapper ──────────────────────────────────────────────────────────────
 const TABS = [
-  { id: 'principal', label: 'SG-SSTGA',       data: sstData },
   { id: 'tab2',      label: 'Profundización',  data: sstTab2Data },
 ]
 
 export default function SST() {
-  const [active, setActive] = useState('principal')
+  const [active, setActive] = useState('tab2')
   const current = TABS.find(t => t.id === active)
 
   return (
     <>
-      <nav className="sst-subtab-bar">
-        <div className="container sst-subtab-inner">
-          {TABS.map(tab => (
-            <button
-              key={tab.id}
-              className={`sst-subtab-btn${active === tab.id ? ' active' : ''}`}
-              onClick={() => setActive(tab.id)}
-            >
-              {tab.label}
-            </button>
-          ))}
-        </div>
-      </nav>
+      {TABS.length > 1 && (
+        <nav className="sst-subtab-bar">
+          <div className="container sst-subtab-inner">
+            {TABS.map(tab => (
+              <button
+                key={tab.id}
+                className={`sst-subtab-btn${active === tab.id ? ' active' : ''}`}
+                onClick={() => setActive(tab.id)}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
+        </nav>
+      )}
 
       {active === 'tab2'
         ? <ProfundizacionTab data={current.data} />

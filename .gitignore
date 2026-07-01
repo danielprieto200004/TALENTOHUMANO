@@ -22,3 +22,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# CMS Generated files (local development)
+public/noticias/noticia-*.html

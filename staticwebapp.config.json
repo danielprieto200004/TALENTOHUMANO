@@ -12,6 +12,21 @@
   },
   "routes": [
     {
+      "route": "/noticias/*",
+      "headers": {
+        "Cache-Control": "no-cache"
+      },
+      "allowedRoles": [
+        "authenticated"
+      ]
+    },
+    {
+      "route": "/api/*",
+      "allowedRoles": [
+        "authenticated"
+      ]
+    },
+    {
       "route": "/*",
       "allowedRoles": [
         "authenticated"

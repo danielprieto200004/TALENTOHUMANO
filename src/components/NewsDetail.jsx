@@ -1,8 +1,12 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { CATEGORIA_COLOR } from '../data/defaultNews'
+import HtmlPostViewer from './HtmlPostViewer'
+import ShareButton from './ShareButton'
 import './NewsDetail.css'
 
 export default function NewsDetail({ noticia, onClose }) {
+  const [htmlContent, setHtmlContent] = useState(noticia.cuerpo || '')
+
   useEffect(() => {
     document.body.style.overflow = 'hidden'
     const handleEsc = (e) => { if (e.key === 'Escape') onClose() }
@@ -12,6 +16,20 @@ export default function NewsDetail({ noticia, onClose }) {
       window.removeEventListener('keydown', handleEsc)
     }
   }, [onClose])
+
+  useEffect(() => {
+    if (noticia.isHtml && !noticia.cuerpo && noticia.url) {
+      fetch(noticia.url)
+        .then((res) => res.text())
+        .then((text) => setHtmlContent(text))
+        .catch((err) => {
+          console.error('Error fetching HTML content:', err)
+          setHtmlContent('<p style="color: red; text-align: center; padding: 20px;">Error al cargar el contenido de la noticia.</p>')
+        })
+    } else {
+      setHtmlContent(noticia.cuerpo || '')
+    }
+  }, [noticia])
 
   const fecha = new Date(noticia.fechaPublicacion).toLocaleDateString('es-CO', {
     day: 'numeric', month: 'long', year: 'numeric'
@@ -36,36 +54,48 @@ export default function NewsDetail({ noticia, onClose }) {
   return (
     <div className="news-detail-overlay" onClick={onClose}>
       <div className="news-detail-modal" onClick={e => e.stopPropagation()}>
-        <button className="news-detail-close" onClick={onClose}>✕</button>
+        <div className="news-detail-floating-actions">
+          <ShareButton noticia={noticia} />
+          <button className="news-detail-close" onClick={onClose}>✕</button>
+        </div>
         
         <div className="news-detail-scroll">
-          <div className="news-detail-header">
-            {noticia.imagen && (
-              isPattern ? (
-                <div className={`news-detail-hero news-${noticia.imagen.replace(':', '-')}`} />
-              ) : (
-                <img src={noticia.imagen} alt="" className="news-detail-hero" />
-              )
-            )}
-            <div className="news-detail-meta-top">
-              <span className="news-detail-cat" style={{ backgroundColor: color }}>
-                {noticia.categoria}
-              </span>
-              <span className="news-detail-date">{fecha}</span>
+          {!noticia.isHtml && (
+            <div className="news-detail-header">
+              {noticia.imagen && (
+                isPattern ? (
+                  <div className={`news-detail-hero news-${noticia.imagen.replace(':', '-')}`} />
+                ) : (
+                  <img src={noticia.imagen} alt="" className="news-detail-hero" />
+                )
+              )}
+              <div className="news-detail-meta-top" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
+                <div>
+                  <span className="news-detail-cat" style={{ backgroundColor: color }}>
+                    {noticia.categoria}
+                  </span>
+                  <span className="news-detail-date">{fecha}</span>
+                </div>
+              </div>
             </div>
-          </div>
+          )}
 
-          <div className="news-detail-body">
-            <h1 className="news-detail-title">{noticia.titulo}</h1>
-            
-            <p className="news-detail-resumen">
-              {noticia.resumen}
-            </p>
+          {noticia.isHtml ? (
+            <div className="news-detail-html-only">
+              <HtmlPostViewer html={htmlContent} />
+            </div>
+          ) : (
+            <div className="news-detail-body">
+              <h1 className="news-detail-title">{noticia.titulo}</h1>
+              
+              <p className="news-detail-resumen">
+                {noticia.resumen}
+              </p>
 
-            <div 
-              className="news-detail-content"
-              dangerouslySetInnerHTML={{ __html: formatCuerpo(noticia.cuerpo) }}
-            />
+              <div 
+                className="news-detail-content"
+                dangerouslySetInnerHTML={{ __html: formatCuerpo(noticia.cuerpo) }}
+              />
 
             {noticia.redireccionUrl && (
               <div className="news-detail-actions">
@@ -81,6 +111,7 @@ export default function NewsDetail({ noticia, onClose }) {
               </div>
             )}
           </div>
+          )}
         </div>
       </div>
     </div>

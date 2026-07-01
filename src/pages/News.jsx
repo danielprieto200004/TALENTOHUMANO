@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNewsContext } from '../context/NewsContext'
 import { useAuth } from '../context/AuthContext'
 import { CATEGORIAS, CATEGORIA_COLOR } from '../data/defaultNews'
@@ -15,6 +15,18 @@ export default function News() {
   const [editando, setEditando] = useState(null)
   const [editorOpen, setEditorOpen] = useState(false)
   const [selectedNews, setSelectedNews] = useState(null)
+
+  useEffect(() => {
+    window.scrollTo(0, 0)
+    const params = new URLSearchParams(window.location.search)
+    const newsId = params.get('id')
+    if (newsId && news.length > 0) {
+      const match = news.find((n) => n.id === newsId)
+      if (match) {
+        setSelectedNews(match)
+      }
+    }
+  }, [news])
 
   const visibles = news
     .filter((n) => isEditor || n.publicada)

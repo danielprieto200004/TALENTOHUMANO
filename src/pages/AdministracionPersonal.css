@@ -42,19 +42,17 @@
    INSTRUCTIVO LAYOUT
    ══════════════════════════════════════════════ */
 .ti-layout {
-  display: grid;
-  grid-template-columns: 260px 1fr;
-  gap: 0 60px;
-  padding-bottom: 100px;
-  align-items: start;
+  display: block;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px 100px;
 }
 
 /* ══════════════════════════════════════════════
    DESKTOP SIDEBAR NAV
    ══════════════════════════════════════════════ */
 .ti-nav {
-  position: sticky;
-  top: 180px;
+  display: none;
 }
 
 .ti-nav-label {
@@ -104,43 +102,71 @@
 }
 
 /* ══════════════════════════════════════════════
-   MOBILE PILL NAV
+   MOBILE PILL NAV (Now Desktop & Mobile Sticky Header Nav)
    ══════════════════════════════════════════════ */
 .ti-pills-bar {
-  display: none;
-  background: #000a1a;
-  padding: 15px 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  display: block;
+  background: rgba(0, 10, 26, 0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
   position: sticky;
-  top: 155px;
+  top: 85px;
   z-index: 850;
 }
 
 .ti-pills-inner {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 24px;
   display: flex;
-  gap: 12px;
-  padding: 0 20px;
+  gap: 4px;
   overflow-x: auto;
   scrollbar-width: none;
 }
 .ti-pills-inner::-webkit-scrollbar { display: none; }
 
 .ti-pill {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: #fff;
-  padding: 8px 18px;
-  border-radius: 20px;
-  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 16px 14px;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  font-family: var(--font-body);
+  font-size: 0.82rem;
   font-weight: 700;
-  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.4);
+  cursor: pointer;
   transition: all 0.3s;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+}
+
+.ti-pill:hover {
+  color: rgba(255, 255, 255, 0.8);
 }
 
 .ti-pill--active {
-  background: var(--coastal) !important;
-  border-color: var(--coastal) !important;
   color: #fff !important;
+  border-bottom-color: var(--gold) !important;
+  background: transparent !important;
+  border-radius: 0 !important;
+  border: none !important;
+  border-bottom: 2px solid var(--gold) !important;
+}
+
+.ti-pill-index {
+  font-family: var(--font-heading);
+  font-weight: 800;
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.25);
+  transition: color 0.3s;
+}
+
+.ti-pill--active .ti-pill-index {
+  color: var(--gold);
 }
 
 /* ══════════════════════════════════════════════
@@ -260,48 +286,93 @@
    ══════════════════════════════════════════════ */
 .ti-contact-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 20px;
-  margin-bottom: 30px;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 24px;
+  margin-top: 30px;
+  margin-bottom: 40px;
 }
 
 .ti-contact-card {
-  background: rgba(255, 255, 255, 0.03);
+  background: rgba(255, 255, 255, 0.02);
   border: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 30px 24px;
   border-radius: 20px;
-  padding: 30px;
-  text-align: center;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 15px;
+  text-align: center;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.ti-contact-card:hover {
+  transform: translateY(-8px);
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(12, 130, 178, 0.3);
+  box-shadow: 0 16px 36px rgba(12, 130, 178, 0.08);
 }
 
 .ti-contact-avatar {
-  width: 60px;
-  height: 60px;
+  width: 64px;
+  height: 64px;
   border-radius: 50%;
-  background: var(--coastal) !important;
-  color: #fff !important;
+  background: linear-gradient(135deg, var(--coastal) 0%, var(--navy) 100%) !important;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.5rem;
+  font-size: 1.3rem;
   font-weight: 800;
+  color: #fff !important;
+  margin-bottom: 20px;
+  box-shadow: 0 8px 16px rgba(12, 130, 178, 0.2);
+  transition: transform 0.3s ease;
+}
+
+.ti-contact-card:hover .ti-contact-avatar {
+  transform: scale(1.08);
 }
 
 .ti-contact-name {
+  font-family: var(--font-heading);
+  font-size: 1rem;
   font-weight: 800;
-  font-size: 0.95rem;
   color: #fff;
-  margin: 0;
+  margin-bottom: 12px;
+  line-height: 1.3;
 }
 
-.ti-contact-email {
-  color: var(--gold) !important;
+.ti-contact-email-text {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.5);
+  margin-bottom: 18px;
+  background: rgba(255, 255, 255, 0.04);
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-family: var(--font-body);
+  word-break: break-all;
+  user-select: all;
+  border: 1px solid rgba(255, 255, 255, 0.03);
+  font-weight: 500;
+}
+
+.ti-contact-mail-btn {
+  width: 100%;
+  padding: 11px 18px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.03);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.1);
   text-decoration: none;
-  font-weight: 600;
-  font-size: 0.85rem;
+  font-size: 0.82rem;
+  font-weight: 700;
+  transition: all 0.2s;
+  display: inline-block;
+  font-family: var(--font-body);
+}
+
+.ti-contact-card:hover .ti-contact-mail-btn {
+  background: var(--coastal);
+  border-color: var(--coastal);
+  box-shadow: 0 4px 12px rgba(12, 130, 178, 0.2);
 }
 
 /* ══════════════════════════════════════════════

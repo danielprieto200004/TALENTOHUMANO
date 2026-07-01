@@ -1,0 +1,982 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lanzamiento de nueva plataforma</title>
+  <meta name="category" content="Anuncio" />
+  <meta name="description" content="Resumen corto para la tarjeta exterior..." />
+  <meta name="author" content="Equipo Symbiotic" />
+  <meta name="featured" content="false" />
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Lora:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ─── VARIABLES — EDITAR AQUÍ PARA PERSONALIZAR ──────────────── */
+    :root {
+      --color-primary:    #0A3D1D;   /* Verde Symbiotic principal */
+      --color-primary-lt: #E8F2EC;   /* Verde muy claro para fondos */
+      --color-dark:       #1D1B1A;   /* Negro suave titulares */
+      --color-mid:        #55524E;   /* Gris texto secundario */
+      --color-bg:         #FAF9F6;   /* Fondo crema */
+      --color-surface:    #EBE9E0;   /* Superficie / separadores */
+      --color-white:      #FFFFFF;
+
+      /* Cambiar acento de color por categoría: verde=anuncio, azul=investigación, etc. */
+      --color-accent:     #0A3D1D;
+    }
+
+    /* ─── RESET LIMPIO ───────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: var(--color-bg);
+      color: var(--color-dark);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    img { max-width: 100%; height: auto; display: block; }
+
+    /* ─── ANIMACIONES ──────────────────────────────────────────── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(28px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+    @keyframes slideRight {
+      from { opacity: 0; transform: translateX(-24px); }
+      to   { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes scaleIn {
+      from { opacity: 0; transform: scale(0.94); }
+      to   { opacity: 1; transform: scale(1); }
+    }
+    @keyframes shimmer {
+      0%   { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50%       { opacity: 0.5; transform: scale(0.8); }
+    }
+    @keyframes lineGrow {
+      from { width: 0; }
+      to   { width: 100%; }
+    }
+    @keyframes countUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Clases de animación con delay */
+    .anim-1 { animation: fadeUp 0.7s cubic-bezier(0.22,1,0.36,1) both; }
+    .anim-2 { animation: fadeUp 0.7s cubic-bezier(0.22,1,0.36,1) 0.12s both; }
+    .anim-3 { animation: fadeUp 0.7s cubic-bezier(0.22,1,0.36,1) 0.24s both; }
+    .anim-4 { animation: fadeUp 0.7s cubic-bezier(0.22,1,0.36,1) 0.36s both; }
+    .anim-slide { animation: slideRight 0.6s cubic-bezier(0.22,1,0.36,1) both; }
+    .anim-scale { animation: scaleIn 0.5s cubic-bezier(0.22,1,0.36,1) both; }
+
+    /* ─── LAYOUT WRAPPER ─────────────────────────────────────────── */
+    .wrapper {
+      width: 100%;
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* ─── HERO SECTION ───────────────────────────────────────────── */
+    .hero {
+      background: var(--color-dark);
+      color: var(--color-white);
+      padding: 72px 0 56px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Grid de puntos de fondo */
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(circle, rgba(255,255,255,0.06) 1px, transparent 1px);
+      background-size: 32px 32px;
+      pointer-events: none;
+    }
+
+    /* Círculo decorativo */
+    .hero::after {
+      content: '';
+      position: absolute;
+      top: -80px; right: -80px;
+      width: 380px; height: 380px;
+      border-radius: 50%;
+      border: 60px solid rgba(10,61,29,0.35);
+      pointer-events: none;
+    }
+
+    .hero-content { position: relative; z-index: 2; }
+
+    .hero-meta {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      padding: 5px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.2);
+      color: rgba(255,255,255,0.9);
+    }
+
+    .badge-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: #34D399;
+      animation: pulse-dot 2s ease-in-out infinite;
+    }
+
+    .hero-date {
+      font-size: 12px;
+      color: rgba(255,255,255,0.45);
+      font-weight: 500;
+      letter-spacing: 0.05em;
+    }
+
+    .hero-title {
+      font-family: 'Inter', sans-serif;
+      font-size: clamp(32px, 6vw, 54px);
+      font-weight: 800;
+      line-height: 1.08;
+      letter-spacing: -0.02em;
+      margin-bottom: 20px;
+      color: #FFFFFF;
+    }
+
+    .hero-title span {
+      /* La palabra clave se muestra con el color accent */
+      color: #34D399;
+    }
+
+    .hero-excerpt {
+      font-family: 'Lora', serif;
+      font-size: 18px;
+      line-height: 1.7;
+      color: rgba(255,255,255,0.65);
+      max-width: 640px;
+      margin-bottom: 32px;
+    }
+
+    .hero-author {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .hero-avatar {
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      background: var(--color-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 800;
+      color: #fff;
+      border: 2px solid rgba(255,255,255,0.15);
+      flex-shrink: 0;
+    }
+
+    .hero-author-info span {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.85);
+    }
+
+    .hero-author-info small {
+      font-size: 11px;
+      color: rgba(255,255,255,0.4);
+    }
+
+    /* ─── SEPARADOR ANIMADO ──────────────────────────────────────── */
+    .divider {
+      height: 3px;
+      background: linear-gradient(90deg, var(--color-primary), #34D399, transparent);
+      animation: lineGrow 1.2s cubic-bezier(0.22,1,0.36,1) 0.5s both;
+    }
+
+    /* ─── CONTENIDO PRINCIPAL ────────────────────────────────────── */
+    .article-body {
+      padding: 60px 0;
+    }
+
+    /* Intro destacada */
+    .intro {
+      font-family: 'Lora', serif;
+      font-size: 21px;
+      line-height: 1.75;
+      color: var(--color-dark);
+      margin-bottom: 48px;
+      padding-bottom: 40px;
+      border-bottom: 1px solid var(--color-surface);
+    }
+
+    .intro strong { color: var(--color-primary); }
+
+    /* Párrafo normal */
+    .text-p {
+      font-family: 'Lora', serif;
+      font-size: 18px;
+      line-height: 1.85;
+      color: rgba(29,27,26,0.88);
+      margin-bottom: 24px;
+    }
+
+    /* Título de sección */
+    .section-title {
+      font-family: 'Inter', sans-serif;
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--color-dark);
+      letter-spacing: -0.01em;
+      margin-bottom: 20px;
+      margin-top: 48px;
+    }
+
+    /* Sub-título */
+    .section-subtitle {
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--color-primary);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .section-subtitle::before {
+      content: '';
+      width: 18px;
+      height: 2px;
+      background: var(--color-primary);
+      display: block;
+    }
+
+    /* ─── STAT CARDS (DATOS) ─────────────────────────────────────── */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 16px;
+      margin: 40px 0;
+    }
+
+    .stat-card {
+      background: var(--color-white);
+      border: 1px solid var(--color-surface);
+      border-radius: 20px;
+      padding: 28px 24px;
+      text-align: center;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      animation: countUp 0.6s ease both;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 32px rgba(0,0,0,0.08);
+    }
+
+    .stat-card:nth-child(2) { animation-delay: 0.1s; }
+    .stat-card:nth-child(3) { animation-delay: 0.2s; }
+
+    .stat-number {
+      font-family: 'Inter', sans-serif;
+      font-size: 42px;
+      font-weight: 900;
+      color: var(--color-primary);
+      letter-spacing: -0.03em;
+      line-height: 1;
+      margin-bottom: 8px;
+      /* Gradiente shimmer en el número */
+      background: linear-gradient(90deg, var(--color-primary), #34D399, var(--color-primary));
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: shimmer 3s linear infinite;
+    }
+
+    .stat-label {
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--color-mid);
+    }
+
+    .stat-desc {
+      font-size: 11px;
+      color: rgba(85,82,78,0.6);
+      margin-top: 4px;
+    }
+
+    /* ─── BLOCKQUOTE ─────────────────────────────────────────────── */
+    .pullquote {
+      border-left: 4px solid var(--color-primary);
+      background: var(--color-primary-lt);
+      border-radius: 0 16px 16px 0;
+      padding: 28px 32px;
+      margin: 40px 0;
+      position: relative;
+    }
+
+    .pullquote::before {
+      content: '"';
+      position: absolute;
+      top: -8px; left: 20px;
+      font-size: 80px;
+      font-family: 'Lora', serif;
+      color: var(--color-primary);
+      opacity: 0.18;
+      line-height: 1;
+    }
+
+    .pullquote p {
+      font-family: 'Lora', serif;
+      font-size: 20px;
+      font-style: italic;
+      line-height: 1.65;
+      color: var(--color-dark);
+    }
+
+    .pullquote cite {
+      display: block;
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--color-primary);
+      margin-top: 12px;
+      font-style: normal;
+    }
+
+    /* ─── IMAGEN DESTACADA ───────────────────────────────────────── */
+    .featured-img {
+      border-radius: 20px;
+      overflow: hidden;
+      margin: 40px 0;
+      background: var(--color-surface);
+      aspect-ratio: 16/9;
+    }
+
+    .featured-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.4s ease;
+    }
+
+    .featured-img:hover img {
+      transform: scale(1.02);
+    }
+
+    .img-caption {
+      font-size: 12px;
+      color: rgba(85,82,78,0.6);
+      text-align: center;
+      margin-top: 10px;
+      font-style: italic;
+    }
+
+    /* ─── LISTA CON ÍCONOS ───────────────────────────────────────── */
+    .icon-list {
+      list-style: none;
+      margin: 24px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .icon-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      font-family: 'Lora', serif;
+      font-size: 17px;
+      line-height: 1.6;
+      color: rgba(29,27,26,0.88);
+    }
+
+    .icon-list li::before {
+      content: '▸';
+      color: var(--color-primary);
+      font-weight: 900;
+      flex-shrink: 0;
+      margin-top: 2px;
+      font-family: 'Inter', sans-serif;
+    }
+
+    /* ─── CALLOUT / TIP ──────────────────────────────────────────── */
+    .callout {
+      background: var(--color-dark);
+      color: var(--color-white);
+      border-radius: 20px;
+      padding: 32px;
+      margin: 40px 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .callout::before {
+      content: '';
+      position: absolute;
+      top: -40px; right: -40px;
+      width: 160px; height: 160px;
+      border-radius: 50%;
+      border: 30px solid rgba(10,61,29,0.5);
+    }
+
+    .callout-label {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: #34D399;
+      margin-bottom: 10px;
+    }
+
+    .callout h3 {
+      font-family: 'Inter', sans-serif;
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      position: relative;
+    }
+
+    .callout p {
+      font-family: 'Lora', serif;
+      font-size: 16px;
+      line-height: 1.7;
+      color: rgba(255,255,255,0.75);
+      position: relative;
+    }
+
+    /* ─── TABLA SIMPLE ───────────────────────────────────────────── */
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      border-radius: 16px;
+      overflow: hidden;
+      margin: 32px 0;
+      font-size: 14px;
+    }
+
+    .data-table thead {
+      background: var(--color-dark);
+      color: var(--color-white);
+    }
+
+    .data-table th {
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      text-align: left;
+      padding: 14px 16px;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .data-table td {
+      font-family: 'Lora', serif;
+      padding: 13px 16px;
+      color: rgba(29,27,26,0.88);
+      border-bottom: 1px solid var(--color-surface);
+    }
+
+    .data-table tbody tr:last-child td { border-bottom: none; }
+    .data-table tbody tr:nth-child(odd) { background: var(--color-white); }
+    .data-table tbody tr:nth-child(even) { background: var(--color-bg); }
+
+    /* ─── BANNER CTA (CIERRE) ────────────────────────────────────── */
+    .cta-section {
+      background: linear-gradient(135deg, var(--color-primary) 0%, #0d5229 100%);
+      border-radius: 24px;
+      padding: 52px 48px;
+      margin-top: 60px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta-section::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(circle, rgba(255,255,255,0.06) 1px, transparent 1px);
+      background-size: 28px 28px;
+    }
+
+    .cta-section::after {
+      content: '';
+      position: absolute;
+      bottom: -60px; right: -60px;
+      width: 240px; height: 240px;
+      border-radius: 50%;
+      border: 50px solid rgba(255,255,255,0.07);
+    }
+
+    .cta-section h2 {
+      font-family: 'Inter', sans-serif;
+      font-size: 30px;
+      font-weight: 800;
+      color: #FFFFFF;
+      margin-bottom: 12px;
+      position: relative;
+    }
+
+    .cta-section p {
+      font-family: 'Lora', serif;
+      font-size: 17px;
+      color: rgba(255,255,255,0.72);
+      margin-bottom: 28px;
+      position: relative;
+    }
+
+    .cta-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #FFFFFF;
+      color: var(--color-primary);
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      padding: 14px 28px;
+      border-radius: 999px;
+      text-decoration: none;
+      position: relative;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      border: none;
+      cursor: pointer;
+    }
+
+    .cta-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 30px rgba(0,0,0,0.25);
+    }
+
+    .cta-btn svg {
+      transition: transform 0.2s ease;
+    }
+
+    .cta-btn:hover svg {
+      transform: translateX(4px);
+    }
+
+    /* ─── TAG ROW ────────────────────────────────────────────────── */
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 32px 0;
+    }
+
+    .tag {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      padding: 5px 14px;
+      border-radius: 999px;
+      border: 1px solid var(--color-surface);
+      color: var(--color-mid);
+      background: var(--color-white);
+      transition: all 0.2s ease;
+    }
+
+    .tag:hover {
+      border-color: var(--color-primary);
+      color: var(--color-primary);
+      background: var(--color-primary-lt);
+    }
+
+    /* ─── PROGRESS BAR ───────────────────────────────────────────── */
+    .progress-item {
+      margin-bottom: 20px;
+    }
+
+    .progress-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--color-dark);
+      margin-bottom: 8px;
+    }
+
+    .progress-bar {
+      height: 8px;
+      background: var(--color-surface);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--color-primary), #34D399);
+      border-radius: 999px;
+      animation: lineGrow 1.4s cubic-bezier(0.22,1,0.36,1) 0.5s both;
+    }
+
+    /* ─── FOOTER DEL POST ────────────────────────────────────────── */
+    .post-footer {
+      border-top: 1px solid var(--color-surface);
+      padding-top: 32px;
+      margin-top: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .post-footer-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .footer-avatar {
+      width: 44px; height: 44px;
+      border-radius: 50%;
+      background: var(--color-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .footer-author-name {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--color-dark);
+    }
+
+    .footer-author-role {
+      font-size: 12px;
+      color: var(--color-mid);
+    }
+
+    /* ─── RESPONSIVE ─────────────────────────────────────────────── */
+    @media (max-width: 600px) {
+      .hero { padding: 48px 0 40px; }
+      .hero-title { font-size: 28px; }
+      .hero-excerpt { font-size: 16px; }
+      .stats-grid { grid-template-columns: 1fr 1fr; }
+      .cta-section { padding: 36px 24px; }
+      .cta-section h2 { font-size: 24px; }
+      .pullquote { padding: 20px 20px; }
+      .pullquote p { font-size: 17px; }
+      .callout { padding: 24px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ══════════════════════════════════════════════════════════
+       SECCIÓN 1: HERO
+       EDITAR: Cambia el badge, título, extracto y autor
+  ══════════════════════════════════════════════════════════ -->
+  <section class="hero">
+    <div class="wrapper hero-content">
+
+      <div class="hero-meta anim-1">
+        <!-- EDITAR: Texto del badge / categoría -->
+        <span class="badge">
+          <span class="badge-dot"></span>
+          Anuncio
+        </span>
+        <!-- EDITAR: Fecha de publicación -->
+        <span class="hero-date">17 de junio de 2026</span>
+      </div>
+
+      <!-- EDITAR: Título principal del artículo -->
+      <!-- Tip: Usa <span> para resaltar palabras clave en color verde -->
+      <h1 class="hero-title anim-2">
+        Symbiotic lanza su nueva<br>
+        plataforma de <span>análisis estratégico</span><br>
+        para educación superior
+      </h1>
+
+      <!-- EDITAR: Resumen introductorio (1-2 oraciones) -->
+      <p class="hero-excerpt anim-3">
+        Hoy presentamos D.A.L.E., el primer dashboard de análisis y lectura estratégica diseñado
+        para ayudar a las instituciones a tomar decisiones basadas en datos reales.
+      </p>
+
+      <!-- EDITAR: Información del autor -->
+      <div class="hero-author anim-4">
+        <div class="hero-avatar">S</div>
+        <div class="hero-author-info">
+          <!-- EDITAR: Nombre del autor -->
+          <span>Equipo Symbiotic</span>
+          <small>Investigación & Desarrollo</small>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Línea decorativa animada -->
+  <div class="divider"></div>
+
+  <!-- ══════════════════════════════════════════════════════════
+       SECCIÓN 2: CUERPO DEL ARTÍCULO
+  ══════════════════════════════════════════════════════════ -->
+  <main class="article-body">
+    <div class="wrapper">
+
+      <!-- ── INTRO DESTACADA ───────────────────────────────── -->
+      <!-- EDITAR: Párrafo de apertura en tipografía serif grande -->
+      <p class="intro anim-2">
+        Durante <strong>más de dos años de investigación</strong> junto con instituciones líderes del país,
+        construimos una herramienta que convierte datos dispersos del SNIES, SPADIES y Saber Pro
+        en decisiones estratégicas claras. Hoy, esa herramienta está disponible.
+      </p>
+
+      <!-- ── ESTADÍSTICAS CLAVE ─────────────────────────────── -->
+      <!-- EDITAR: Cambia los números, labels y descripciones -->
+      <div class="section-subtitle anim-slide">Datos del proyecto</div>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-number">+30</div>
+          <div class="stat-label">Indicadores</div>
+          <div class="stat-desc">Métricas de competitividad</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">15K</div>
+          <div class="stat-label">Respuestas</div>
+          <div class="stat-desc">Encuesta nacional 2023–2025</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">5</div>
+          <div class="stat-label">Universidades</div>
+          <div class="stat-desc">Piloto en marcha</div>
+        </div>
+      </div>
+
+      <!-- ── SECCIÓN DE TEXTO ──────────────────────────────── -->
+      <!-- EDITAR: Título y contenido de sección -->
+      <h2 class="section-title anim-2">¿Qué es D.A.L.E. y por qué lo construimos?</h2>
+
+      <p class="text-p">
+        Colombia tiene más de 10,000 programas de educación superior activos. Sin embargo, las decisiones
+        sobre qué programas abrir, cerrar o transformar rara vez se apoyan en datos sistemáticos. Eso
+        es exactamente el problema que D.A.L.E. resuelve.
+      </p>
+
+      <p class="text-p">
+        La plataforma integra en tiempo real información de cuatro fuentes oficiales: el Sistema Nacional
+        de Información de la Educación Superior (SNIES), el Sistema para la Prevención de la Deserción (SPADIES),
+        los resultados de Saber Pro y los datos del Observatorio Laboral para la Educación (OLE).
+      </p>
+
+      <!-- ── IMAGEN (opcional) ─────────────────────────────── -->
+      <!-- EDITAR: Cambia src="TU_IMAGEN.jpg" por la URL de tu imagen -->
+      <!-- Para ocultar esta sección: agrega style="display:none" -->
+      <div class="featured-img anim-scale" style="display:none">
+        <img src="TU_IMAGEN_AQUI.jpg" alt="Descripción de la imagen" loading="lazy" />
+      </div>
+      <!-- Si usas la imagen, descomenta y edita esto: -->
+      <!-- <p class="img-caption">Pie de foto: descripción de la imagen arriba.</p> -->
+
+      <!-- ── LISTA DE PUNTOS CLAVE ─────────────────────────── -->
+      <!-- EDITAR: Cada <li> es un punto de la lista -->
+      <div class="section-subtitle anim-slide">Características principales</div>
+
+      <ul class="icon-list">
+        <li>Mapas de calor de competitividad por región y área de conocimiento</li>
+        <li>Análisis de deserción y retención estudiantil con predicciones a 5 años</li>
+        <li>Comparativa automatizada con los 10 competidores directos de cada programa</li>
+        <li>Reportes exportables en PDF y Excel listos para Consejos Académicos</li>
+        <li>Actualización automática con cada publicación del SNIES y Saber Pro</li>
+      </ul>
+
+      <!-- ── BARRAS DE PROGRESO (opcional) ─────────────────── -->
+      <!-- EDITAR: Ajusta el width del .progress-fill (max 100%) y el porcentaje -->
+      <h2 class="section-title">Resultados del piloto</h2>
+
+      <div class="progress-item">
+        <div class="progress-label">
+          <span>Reducción en tiempo de análisis</span>
+          <span>87%</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill" style="width: 87%"></div>
+        </div>
+      </div>
+
+      <div class="progress-item">
+        <div class="progress-label">
+          <span>Adopción por parte de directivos</span>
+          <span>94%</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill" style="width: 94%"></div>
+        </div>
+      </div>
+
+      <div class="progress-item">
+        <div class="progress-label">
+          <span>Precisión de las proyecciones de matrícula</span>
+          <span>91%</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill" style="width: 91%"></div>
+        </div>
+      </div>
+
+      <!-- ── TABLA DE DATOS (opcional) ─────────────────────── -->
+      <!-- Para ocultar: agrega style="display:none" a la tabla -->
+      <h2 class="section-title">Comparativo de plataformas</h2>
+
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Plataforma</th>
+            <th>Fuentes integradas</th>
+            <th>Actualización</th>
+            <th>Exportación</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>D.A.L.E. (Symbiotic)</strong></td>
+            <td>SNIES, SPADIES, Saber Pro, OLE</td>
+            <td>Automática</td>
+            <td>PDF + Excel</td>
+          </tr>
+          <tr>
+            <td>Plataforma B</td>
+            <td>SNIES</td>
+            <td>Manual trimestral</td>
+            <td>Solo PDF</td>
+          </tr>
+          <tr>
+            <td>Plataforma C</td>
+            <td>SPADIES</td>
+            <td>Anual</td>
+            <td>No disponible</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- ── CITA / PULLQUOTE ──────────────────────────────── -->
+      <!-- EDITAR: La cita y el autor -->
+      <blockquote class="pullquote anim-2">
+        <p>
+          "Antes tardábamos tres semanas en preparar el informe de competitividad para el Consejo Directivo.
+          Con D.A.L.E., lo tenemos listo en 40 minutos y con datos tres veces más actualizados."
+        </p>
+        <cite>— Directora Académica, Universidad Piloto, 2026</cite>
+      </blockquote>
+
+      <!-- ── CALLOUT / DESTACADO ───────────────────────────── -->
+      <!-- EDITAR: Título y texto del destacado oscuro -->
+      <div class="callout anim-scale">
+        <div class="callout-label">💡 Para tener en cuenta</div>
+        <h3>¿Cómo acceder a D.A.L.E.?</h3>
+        <p>
+          La plataforma está disponible en modalidad SaaS con tres planes: Explorador (gratuito con datos abiertos),
+          Estratégico y Enterprise. Las instituciones interesadas pueden solicitar una demostración personalizada
+          directamente desde nuestro sitio web.
+        </p>
+      </div>
+
+      <!-- ── TAGS ──────────────────────────────────────────── -->
+      <!-- EDITAR: Agrega o quita tags según el tema del artículo -->
+      <div class="tag-row">
+        <span class="tag">Educación Superior</span>
+        <span class="tag">Análisis de Datos</span>
+        <span class="tag">D.A.L.E.</span>
+        <span class="tag">Colombia</span>
+        <span class="tag">SNIES</span>
+        <span class="tag">Innovación</span>
+      </div>
+
+      <!-- ─── SECCIÓN CTA (CIERRE DEL ARTÍCULO) ──────────────────── -->
+      <!-- EDITAR: Título, descripción y URL del botón -->
+      <div class="cta-section anim-2">
+        <h2>¿Tu institución necesita esto?</h2>
+        <p>Solicita una demostración sin costo y descubre cómo D.A.L.E. puede transformar tus decisiones académicas.</p>
+        <!-- EDITAR: Cambia el href por tu URL de destino -->
+        <a href="https://symbioticstartup.com/solicitud" class="cta-btn" target="_blank" rel="noopener">
+          Solicitar demo
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+          </svg>
+        </a>
+      </div>
+
+      <!-- ─── PIE DEL ARTÍCULO ───────────────────────────────────── -->
+      <div class="post-footer">
+        <div class="post-footer-left">
+          <!-- EDITAR: inicial del autor y nombre completo -->
+          <div class="footer-avatar">S</div>
+          <div>
+            <div class="footer-author-name">Equipo Symbiotic</div>
+            <div class="footer-author-role">Investigación & Desarrollo · symbioticstartup.com</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- ══════════════════════════════════════════════════════════
+       SCRIPT: Auto-ajuste de altura en iframe del blog
+       (No editar — necesario para que el blog calcule bien la altura)
+  ══════════════════════════════════════════════════════════ -->
+  <script>
+    // Notifica al padre el alto real del documento para auto-resize del iframe
+    function notifyHeight() {
+      const height = document.documentElement.scrollHeight;
+      if (window.parent !== window) {
+        window.parent.postMessage({ type: 'symbiotic-iframe-height', height }, '*');
+      }
+    }
+    // Observar cambios de tamaño
+    if (typeof ResizeObserver !== 'undefined') {
+      new ResizeObserver(notifyHeight).observe(document.body);
+    }
+    window.addEventListener('load', notifyHeight);
+    setTimeout(notifyHeight, 300);
+    setTimeout(notifyHeight, 800);
+  </script>
+
+</body>
+</html>

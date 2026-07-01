@@ -186,10 +186,20 @@ function SecTutoria({ bloque }) {
 }
 
 function SecContacto({ bloque }) {
+  const getInitials = (name) => {
+    const parts = name.trim().split(/\s+/)
+    if (parts.length >= 2) {
+      return (parts[0][0] + parts[1][0]).toUpperCase()
+    }
+    return parts[0] ? parts[0][0].toUpperCase() : ''
+  }
+
   const contacts = bloque.nombres.map((nombre, i) => ({
     nombre,
     correo: bloque.correos[i],
+    inicial: getInitials(nombre),
   }))
+
   return (
     <SectionAnchor id="sec-contacto">
       <h2 className="ti-section-title">{bloque.titulo}</h2>
@@ -197,11 +207,12 @@ function SecContacto({ bloque }) {
         {contacts.map((c) => (
           <div key={c.correo} className="ti-contact-card">
             <div className="ti-contact-avatar">
-              {c.nombre.trim()[0]}
+              {c.inicial}
             </div>
-            <p className="ti-contact-name">{c.nombre.trim()}</p>
-            <a href={`mailto:${c.correo}`} className="ti-contact-email">
-              {c.correo}
+            <h3 className="ti-contact-name">{c.nombre.trim()}</h3>
+            <span className="ti-contact-email-text">{c.correo}</span>
+            <a href={`mailto:${c.correo}`} className="ti-contact-mail-btn">
+              Enviar correo →
             </a>
           </div>
         ))}
@@ -298,12 +309,13 @@ function InstructivoPills({ activeId, onNav }) {
   return (
     <div className="ti-pills-bar">
       <div className="ti-pills-inner">
-        {NAV_SECTIONS.map(sec => (
+        {NAV_SECTIONS.map((sec, i) => (
           <button
             key={sec.id}
             className={`ti-pill${activeId === sec.id ? ' ti-pill--active' : ''}`}
             onClick={() => onNav(sec.id)}
           >
+            <span className="ti-pill-index">{String(i + 1).padStart(2, '0')}</span>
             {sec.label}
           </button>
         ))}
@@ -325,7 +337,7 @@ function InstructivoTab({ data }) {
           if (entry.isIntersecting) setActiveId(entry.target.id)
         })
       },
-      { rootMargin: '-15% 0px -70% 0px', threshold: 0 }
+      { rootMargin: '-100px 0px -50% 0px', threshold: 0 }
     )
     NAV_SECTIONS.forEach(sec => {
       const el = document.getElementById(sec.id)
@@ -372,8 +384,6 @@ function InstructivoTab({ data }) {
 
       <div className="section">
         <div className="container ti-layout">
-          <InstructivoNav activeId={activeId} onNav={scrollTo} />
-
           <div className="ti-content">
             <SecCertificados bloque={b['instructivo-pdf']} onOpenDrawer={openDrawer} />
             <SecDetallado    bloque={b['recordatorio-uno']} />
@@ -399,29 +409,30 @@ function InstructivoTab({ data }) {
 
 // ── Tabs wrapper ──────────────────────────────────────────────────────────────
 const TABS = [
-  { id: 'principal',   label: 'Talentos Innovadores', data: administracionData },
   { id: 'instructivo', label: 'Instructivo',           data: administracionTab2Data },
 ]
 
 export default function AdministracionPersonal() {
-  const [active, setActive] = useState('principal')
+  const [active, setActive] = useState('instructivo')
   const current = TABS.find(t => t.id === active)
 
   return (
     <>
-      <nav className="subtab-bar">
-        <div className="container subtab-inner">
-          {TABS.map(tab => (
-            <button
-              key={tab.id}
-              className={`subtab-btn${active === tab.id ? ' subtab-btn--active' : ''}`}
-              onClick={() => setActive(tab.id)}
-            >
-              {tab.label}
-            </button>
-          ))}
-        </div>
-      </nav>
+      {TABS.length > 1 && (
+        <nav className="subtab-bar">
+          <div className="container subtab-inner">
+            {TABS.map(tab => (
+              <button
+                key={tab.id}
+                className={`subtab-btn${active === tab.id ? ' subtab-btn--active' : ''}`}
+                onClick={() => setActive(tab.id)}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
+        </nav>
+      )}
 
       {active === 'instructivo'
         ? <InstructivoTab data={current.data} />

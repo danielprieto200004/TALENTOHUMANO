@@ -1,16 +1,17 @@
 import { memo, useCallback, useState, useEffect } from 'react'
 import { createPortal } from 'react-dom'
 import { IoCloseOutline, IoExpandOutline } from 'react-icons/io5'
+import { BsClockHistory, BsListCheck, BsEnvelopeAt, BsWhatsapp, BsTelephone, BsHeadset } from 'react-icons/bs'
 import StaticPage from './StaticPage'
 import { bienestarData, bienestarTab2Data } from '../data/staticSections'
 import unicorporativaImg from '../assets/img/unicorporativa-page.png'
 import colegiosImg       from '../assets/img/colegios-minuto-de-dios.webp'
 import gimnasiosImg      from '../assets/img/gimnasios.png'
-import jardinesImg       from '../assets/img/jardines-de-paz.jpg'
+import laOfrendaImg      from '../assets/img/la-ofrenda.png'
 import cooperativaImg   from '../assets/img/cooperativa.png'
 import './Bienestar.css'
 
-const ACCENT = '#00a651'
+const ACCENT = '#0c82b2'
 
 // PDF resolver
 const pdfModules = import.meta.glob('../assets/pdf/*.pdf', { eager: true, query: '?url', import: 'default' })
@@ -21,7 +22,7 @@ function findPdf(keyword) {
 const PDF_ATRACCION = findPdf('ATRACCION')
 
 // Mapa imagen por id de beneficio
-const BENEFICIO_IMGS = [colegiosImg, gimnasiosImg, jardinesImg, cooperativaImg]
+const BENEFICIO_IMGS = [colegiosImg, gimnasiosImg, laOfrendaImg, cooperativaImg]
 
 // ── Reusable atoms ──────────────────────────────────────────────────────────
 function Callout({ children }) {
@@ -60,6 +61,7 @@ function PdfEmbed({ src, title }) {
 
 // ── Section: Acceso (banner) ────────────────────────────────────────────────
 function SecAcceso({ bloque }) {
+  if (!bloque) return null
   return (
     <section id="uc-acceso" className="uc-section uc-section-anim">
       <div className="uc-banner">
@@ -89,6 +91,7 @@ function SecAcceso({ bloque }) {
 
 // ── Section: Fechas (tabla) ─────────────────────────────────────────────────
 function SecFechas({ bloque }) {
+  if (!bloque) return null
   return (
     <section id="uc-fechas" className="uc-section uc-section-anim">
       <h2 className="uc-section-title">{bloque.titulo}</h2>
@@ -213,6 +216,7 @@ function SmartDocCard({ titulo, pdf, fuente, onOpenDrawer }) {
 
 // ── Section: Beneficios (tarjetas con imagen) ───────────────────────────────
 const SecBeneficios = memo(function SecBeneficios({ bloque, onOpenImage }) {
+  if (!bloque) return null
   return (
     <section id="uc-beneficios" className="uc-section uc-section-anim">
       <h2 className="uc-section-title">{bloque.titulo}</h2>
@@ -245,6 +249,7 @@ const SecBeneficios = memo(function SecBeneficios({ bloque, onOpenImage }) {
 
 // ── Section: Atracción y selección (PDF + botón) ────────────────────────────
 function SecAtraccion({ bloque, onOpenDrawer }) {
+  if (!bloque) return null
   return (
     <section id="uc-atraccion" className="uc-section uc-section-anim">
       <h2 className="uc-section-title">Atracción y selección</h2>
@@ -254,12 +259,131 @@ function SecAtraccion({ bloque, onOpenDrawer }) {
   )
 }
 
+// ── Section: Contactos ──────────────────────────────────────────────────────
+const CONTACTOS_DATA = [
+  { nombre: 'ALBA MILENA LEON CAÑAVERAL', cargo: 'Coordinadora de Bienestar y Desarrollo', correo: 'alba.leon@uniminuto.edu', inicial: 'AM' },
+  { nombre: 'ALISON ESTEISY OCAMPO CABUYA', cargo: 'Profesional de Bienestar y Desarrollo', correo: 'alison.ocampo.c@uniminuto.edu', inicial: 'AO' },
+  { nombre: 'JOSE MISAEL HUERTAS HERNANDEZ', cargo: 'Profesional de Bienestar y Desarrollo', correo: 'jose.huertas.h@uniminuto.edu', inicial: 'JH' },
+  { nombre: 'WENDY DAYANA MOTTA GUTIERREZ', cargo: 'Profesional de Bienestar y Desarrollo', correo: 'wendy.motta@uniminuto.edu', inicial: 'WM' }
+]
+
+function SecContactos({ bloque }) {
+  return (
+    <section id="uc-contactos" className="uc-section uc-section-anim">
+      <h2 className="uc-section-title">Contactos Bienestar y Desarrollo</h2>
+      <p className="uc-section-intro" style={{ marginBottom: '24px' }}>
+        Para cualquier duda, solicitud o acompañamiento, ponte en contacto con nuestro equipo de profesionales:
+      </p>
+      
+      <div className="uc-contactos-grid">
+        {CONTACTOS_DATA.map((c) => (
+          <div key={c.correo} className="uc-contacto-card">
+            <div className="uc-contacto-avatar">
+              {c.inicial}
+            </div>
+            <h3 className="uc-contacto-name">{c.nombre}</h3>
+            <p className="uc-contacto-role">{c.cargo}</p>
+            <span className="uc-contacto-email">{c.correo}</span>
+            <a href={`mailto:${c.correo}`} className="uc-contacto-mail-btn">
+              Enviar correo →
+            </a>
+          </div>
+        ))}
+      </div>
+    </section>
+  )
+}
+
+function SecSeguroExequial({ bloque }) {
+  if (!bloque) return null
+  return (
+    <section id="uc-seguro-exequial" className="uc-section uc-section-anim">
+      <h2 className="uc-section-title">Seguro Exequial La Ofrenda S.A.</h2>
+      
+      <div className="la-ofrenda-alert-card">
+        <div className="la-ofrenda-alert-icon"><BsClockHistory /></div>
+        <div className="la-ofrenda-alert-info">
+          <h3>Plazo de Registro Ampliado</h3>
+          <p>La fecha límite para actualizar tu grupo familiar y mascotas es el <strong>15 de mayo de 2026</strong>. Si no realizas modificaciones antes de esta fecha, tu plan quedará asignado automáticamente bajo la cobertura base (Titular y primer grado de consanguinidad).</p>
+        </div>
+      </div>
+
+      <div className="la-ofrenda-plans-grid">
+        <div className="la-ofrenda-plan-card">
+          <span className="la-ofrenda-plan-tag">Opción 1</span>
+          <h4>Familiar + Mascota</h4>
+          <p className="la-ofrenda-plan-desc">Titular + 8 beneficiarios + 1 mascota.</p>
+        </div>
+        <div className="la-ofrenda-plan-card">
+          <span className="la-ofrenda-plan-tag">Opción 2</span>
+          <h4>Familiar Extendido</h4>
+          <p className="la-ofrenda-plan-desc">Titular + 9 beneficiarios.</p>
+        </div>
+      </div>
+
+      <div className="la-ofrenda-steps-box">
+        <h3>
+          <BsListCheck style={{ marginRight: '10px', verticalAlign: 'middle', color: '#0c82b2' }} />
+          Datos requeridos para el registro:
+        </h3>
+        <div className="la-ofrenda-step">
+          <span className="la-ofrenda-step-num">1</span>
+          <div className="la-ofrenda-step-content">
+            <strong>Datos del colaborador UNIMINUTO</strong>
+            <p>Nombre completo y número de cédula.</p>
+          </div>
+        </div>
+        <div className="la-ofrenda-step">
+          <span className="la-ofrenda-step-num">2</span>
+          <div className="la-ofrenda-step-content">
+            <strong>Si deseas registrar beneficiarios</strong>
+            <p>Nombre completo, parentesco, fecha de nacimiento y número del documento de identidad.</p>
+          </div>
+        </div>
+        <div className="la-ofrenda-step">
+          <span className="la-ofrenda-step-num">3</span>
+          <div className="la-ofrenda-step-content">
+            <strong>Si deseas registrar beneficiarios + mascota</strong>
+            <p>Además de la información anterior, incluir: Nombre de la mascota, raza, tipo (canino, felino o ave), edad (máximo 10 años), peso, color y características particulares.</p>
+          </div>
+        </div>
+      </div>
+
+      <div className="la-ofrenda-channels-box">
+        <h3>
+          <BsHeadset style={{ marginRight: '10px', verticalAlign: 'middle', color: '#0c82b2' }} />
+          Canales de Atención La Ofrenda:
+        </h3>
+        <div className="la-ofrenda-channels-grid">
+          <a href="mailto:coordinador.nacional@laofrendasa.com" className="la-ofrenda-channel-card">
+            <span className="la-ofrenda-channel-icon"><BsEnvelopeAt /></span>
+            <strong>Correo Electrónico</strong>
+            <p>coordinador.nacional@laofrendasa.com</p>
+          </a>
+          <a href="https://wa.me/573227619382" target="_blank" rel="noopener noreferrer" className="la-ofrenda-channel-card">
+            <span className="la-ofrenda-channel-icon"><BsWhatsapp /></span>
+            <strong>WhatsApp / Celular</strong>
+            <p>322 761 9382</p>
+          </a>
+          <a href="tel:018000180828" className="la-ofrenda-channel-card">
+            <span className="la-ofrenda-channel-icon"><BsTelephone /></span>
+            <strong>Línea Gratuita Nacional</strong>
+            <p>018000 180828</p>
+          </a>
+        </div>
+      </div>
+    </section>
+  )
+}
+
 // ── Section nav ─────────────────────────────────────────────────────────────
 const UC_SECTIONS = [
   { id: 'uc-acceso',     label: 'Unicorporativa' },
   { id: 'uc-fechas',     label: 'Fechas clave' },
   { id: 'uc-beneficios', label: 'Beneficios' },
+  { id: 'uc-seguro-exequial', label: 'Seguro Exequial' },
   { id: 'uc-atraccion',  label: 'Atracción y Selección' },
+  { id: 'uc-contactos',  label: 'Contactos' },
 ]
 
 function UcStickyNav({ activeId, onNav }) {
@@ -293,7 +417,7 @@ function UnicorporativaTab({ data }) {
       entries => entries.forEach(entry => {
         if (entry.isIntersecting) setActiveId(entry.target.id)
       }),
-      { rootMargin: '-15% 0px -70% 0px', threshold: 0 }
+      { rootMargin: '-100px 0px -50% 0px', threshold: 0 }
     )
     UC_SECTIONS.forEach(sec => {
       const el = document.getElementById(sec.id)
@@ -342,7 +466,9 @@ function UnicorporativaTab({ data }) {
           <SecAcceso    bloque={b['acceso']} />
           <SecFechas    bloque={b['fechas']} />
           <SecBeneficios bloque={b['beneficios']} onOpenImage={openImage} />
+          <SecSeguroExequial bloque={b['seguro-exequial']} />
           <SecAtraccion bloque={b['atraccion-seleccion']} onOpenDrawer={openDrawer} />
+          <SecContactos bloque={b['contactos-bienestar']} />
         </div>
       </div>
 
@@ -354,29 +480,30 @@ function UnicorporativaTab({ data }) {
 
 // ── Tabs wrapper ────────────────────────────────────────────────────────────
 const TABS = [
-  { id: 'principal', label: 'Bienestar y Desarrollo', data: bienestarData },
   { id: 'tab2',      label: 'Unicorporativa',          data: bienestarTab2Data },
 ]
 
 export default function Bienestar() {
-  const [active, setActive] = useState('principal')
+  const [active, setActive] = useState('tab2')
   const current = TABS.find(t => t.id === active)
 
   return (
     <>
-      <nav className="bienestar-subtab-bar">
-        <div className="container bienestar-subtab-inner">
-          {TABS.map(tab => (
-            <button
-              key={tab.id}
-              className={`bienestar-subtab-btn${active === tab.id ? ' bienestar-subtab-btn--active' : ''}`}
-              onClick={() => setActive(tab.id)}
-            >
-              {tab.label}
-            </button>
-          ))}
-        </div>
-      </nav>
+      {TABS.length > 1 && (
+        <nav className="bienestar-subtab-bar">
+          <div className="container bienestar-subtab-inner">
+            {TABS.map(tab => (
+              <button
+                key={tab.id}
+                className={`bienestar-subtab-btn${active === tab.id ? ' bienestar-subtab-btn--active' : ''}`}
+                onClick={() => setActive(tab.id)}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
+        </nav>
+      )}
 
       {active === 'tab2'
         ? <UnicorporativaTab data={current.data} />

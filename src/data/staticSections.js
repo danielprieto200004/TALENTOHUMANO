@@ -268,7 +268,7 @@ export const bienestarTab2Data = {
       items: [
         'Aprovecha los descuentos que tienen preparados los colegios minuto de Dios.',
         'En UNIMINUTO pensamos en tu bienestar. Ahora puedes acceder a gimnasios aliados con tarifas preferenciales para colaboradores.',
-        'No tienes que pasar por esto solo. Descubre el acompañamiento integral y la calidez humana que solo Jardines de Paz te puede brindar en los momentos más difíciles. Asesorate con Edwin: 3243572852',
+        'Actualiza tu seguro exequial con el nuevo aliado La Ofrenda S.A. Plazo de registro ampliado hasta el 31 de mayo de 2026. Comunícate al WhatsApp: 3227619382 o correo: coordinador.nacional@laofrendasa.com.',
         'Afiliate a la cooperativa y no te quedes sin sus beneficios.',
       ],
       // Cada item debe estar acompañada de su imagen correspondiente, asociada a cada entidad mencionada: assets/colegios-minuto-de-diso, assets/cooperativa, assets/jardines-de-paz, assets/gimnasios
@@ -278,6 +278,18 @@ export const bienestarTab2Data = {
       titulo: 'Si tu rol te permite contar con personal a cargo y requieres realizar una solicitud de puesto desde Talentos Innovadores, ingresa al manual adjunto donde encontrarás el paso a paso para llevar a cabo tu solicitud.',
       fuente: 'https://uniminuto0.sharepoint.com/:b:/r/sites/SSTGABogota/SiteAssets/SitePages/Inducci%C3%B3n-y-Reinducci%C3%B3n/MANUAL-MODULO-ATRACCION-Y-SELECCION.pdf?csf=1&web=1&e=ckTh9h',
       // La fuente es un botón. Mostrar la previsualización del pdf que está en src\assets\pdf\MANUAL-MODULO-ATRACCION-Y-SELECCION.pdf
+    },
+    {
+      id: 'contactos-bienestar',
+      titulo: 'Contactos Bienestar y Desarrollo',
+      contenido:
+        'Para cualquier duda, solicitud o acompañamiento, ponte en contacto con nuestro equipo de profesionales:\n\n• Coordinadora:\n   - ALBA MILENA LEON CAÑAVERAL (alba.leon@uniminuto.edu)\n\n• Profesionales:\n   - ALISON ESTEISY OCAMPO CABUYA (alison.ocampo.c@uniminuto.edu)\n   - JOSE MISAEL HUERTAS HERNANDEZ (jose.huertas.h@uniminuto.edu)\n   - WENDY DAYANA MOTTA GUTIERREZ (wendy.motta@uniminuto.edu)',
+    },
+    {
+      id: 'seguro-exequial',
+      titulo: 'Seguro Exequial La Ofrenda S.A.',
+      contenido:
+        'A partir del 01 de mayo de 2026, La Ofrenda S.A. está a cargo de la protección exequial familiar.\n\n📅 FECHAS IMPORTANTES:\n• Plazo de actualización hasta el: 31 de mayo de 2026\n\n⚠️ NOTA IMPORTANTE:\nSi no se realiza ninguna modificación antes de esta fecha, tu plan quedará asignado automáticamente bajo la cobertura base (Titular y primer grado de consanguinidad).\n\n🛡️ OPCIONES DE PLAN DISPONIBLES:\n• Opción 1: Titular + 8 beneficiarios + 1 mascota\n• Opción 2: Titular + 9 beneficiarios\n\n📋 DATOS REQUERIDOS PARA EL REGISTRO:\n\n1. Datos del colaborador UNIMINUTO:\n   - Nombre completo y número de cédula.\n\n2. Si deseas registrar beneficiarios:\n   - Nombre completo, parentesco, fecha de nacimiento y documento de identidad.\n\n3. Si deseas registrar beneficiarios + mascota:\n   - Datos anteriores más: Nombre de la mascota, raza, tipo (canino, felino o ave), edad (máx 10 años), peso, color y características particulares.\n\n💬 CANALES DE ATENCIÓN LA OFRENDA:\n• WhatsApp exclusivo: 3227619382 (Indicar que hacen parte del convenio UNIMINUTO - La Ofrenda)\n• Correo electrónico: coordinador.nacional@laofrendasa.com\n• Línea gratuita nacional: 018000 180828',
     },
   ],
 }
