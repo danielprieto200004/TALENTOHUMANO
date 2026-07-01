@@ -32,17 +32,22 @@ export function NewsProvider({ children }) {
       .catch((err) => console.error('Error loading news:', err))
   }, [])
 
-  const startLoadingTimer = () => {
+  const startLoadingTimer = (targetId, isDelete, targetNoticia) => {
     setLoadingProgress({ progress: 0, secondsLeft: 210, done: false })
     
-    const interval = setInterval(() => {
+    // Intervalo de la barra de carga visual (1 segundo)
+    const visualInterval = setInterval(() => {
       setLoadingProgress((prev) => {
         if (!prev) {
-          clearInterval(interval)
+          clearInterval(visualInterval)
           return null
         }
         if (prev.secondsLeft <= 1) {
-          clearInterval(interval)
+          clearInterval(visualInterval)
+          // Si llega a 0, recarga automáticamente
+          setTimeout(() => {
+            window.location.reload()
+          }, 1000)
           return { progress: 100, secondsLeft: 0, done: true }
         }
         const nextSeconds = prev.secondsLeft - 1
@@ -50,6 +55,40 @@ export function NewsProvider({ children }) {
         return { progress: nextProgress, secondsLeft: nextSeconds, done: false }
       })
     }, 1000)
+
+    // Intervalo de comprobación en tiempo real (cada 8 segundos)
+    const pollInterval = setInterval(async () => {
+      try {
+        const res = await fetch(`/noticias/index.json?t=${Date.now()}`)
+        if (!res.ok) return
+        const list = await res.json()
+        const remoteItem = list.find(n => n.id === targetId)
+
+        let propagated = false
+        if (isDelete) {
+          // Si es borrado: o ya no existe en el index.json, o está marcado como oculta (publicada: false)
+          propagated = !remoteItem || remoteItem.publicada === false
+        } else if (targetNoticia) {
+          // Si es agregar/editar: debe existir, estar publicada, y tener la información actualizada
+          propagated = remoteItem && 
+                       remoteItem.publicada === true && 
+                       remoteItem.titulo === targetNoticia.titulo && 
+                       remoteItem.resumen === targetNoticia.resumen
+        }
+
+        if (propagated) {
+          clearInterval(visualInterval)
+          clearInterval(pollInterval)
+          setLoadingProgress({ progress: 100, secondsLeft: 0, done: true })
+          // Recargar automáticamente de inmediato
+          setTimeout(() => {
+            window.location.reload()
+          }, 1500)
+        }
+      } catch (e) {
+        console.error('Error polling propagation:', e)
+      }
+    }, 8000)
   }
 
   const showErrorDialog = (message) => {
@@ -92,7 +131,7 @@ export function NewsProvider({ children }) {
     if (result && result.ok) {
       const finalNoticia = { ...noticia, id: result.id, url: result.url }
       dispatch({ type: 'UPDATE', news: finalNoticia })
-      startLoadingTimer()
+      startLoadingTimer(result.id, false, noticia)
     }
   }
 
@@ -100,7 +139,7 @@ export function NewsProvider({ children }) {
     dispatch({ type: 'UPDATE', news: noticia })
     const result = await saveNewsApi(noticia)
     if (result && result.ok) {
-      startLoadingTimer()
+      startLoadingTimer(noticia.id, false, noticia)
     }
   }
 
@@ -118,7 +157,7 @@ export function NewsProvider({ children }) {
           dispatch({ type: 'UPDATE', news: despublicada })
           const result = await saveNewsApi(despublicada)
           if (result && result.ok) {
-            startLoadingTimer()
+            startLoadingTimer(id, true)
           }
         },
         onCancel: () => setConfirmDialog(null)
