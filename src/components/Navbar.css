@@ -132,24 +132,43 @@
   box-shadow: 0 12px 25px rgba(255, 255, 255, 0.2);
 }
 
-.navbar-v2-editor-status {
-  background: var(--gold);
-  color: var(--navy);
-  font-size: 0.75rem;
+.navbar-v2-editor-status-floating {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 9999;
+  background: #DC2626;
+  color: #ffffff;
+  font-size: 0.8rem;
   font-weight: 800;
-  padding: 4px 0;
-  text-align: center;
+  padding: 12px 20px;
+  border-radius: 50px;
+  box-shadow: 0 8px 25px rgba(220, 38, 38, 0.4);
   text-transform: uppercase;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.05em;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  pointer-events: none;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  animation: pulseButton 2s infinite alternate;
+}
+
+.navbar-v2-editor-status-floating .status-dot {
+  background: #ffffff;
+}
+
+@keyframes pulseButton {
+  from { transform: scale(1); }
+  to { transform: scale(1.04); }
 }
 
 .status-dot {
   display: inline-block;
-  width: 6px;
-  height: 6px;
+  width: 8px;
+  height: 8px;
   background: var(--navy);
   border-radius: 50%;
-  margin-right: 8px;
   vertical-align: middle;
   animation: pulseStatus 1.5s infinite;
 }

@@ -48,11 +48,9 @@ export default function Navbar() {
         </nav>
       </div>
 
-      {isEditor && (
-        <div className="navbar-v2-editor-status">
-          <div className="container">
-            <span className="status-dot"></span> Modo Editor Activo
-          </div>
+            {isEditor && (
+        <div className="navbar-v2-editor-status-floating">
+          <span className="status-dot"></span> Modo Editor Activo
         </div>
       )}
     </header>

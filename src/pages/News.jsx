@@ -53,7 +53,7 @@ export default function News() {
   }
 
   function handleDelete(id) {
-    if (confirm('¿Eliminar esta noticia?')) deleteNews(id)
+    deleteNews(id)
   }
 
   return (
