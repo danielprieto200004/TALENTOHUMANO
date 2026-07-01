@@ -12,7 +12,7 @@ export default function Navbar() {
     <header className="navbar-v2">
       <div className="container navbar-v2-inner">
         <NavLink to="/" className="navbar-v2-brand">
-          <div className="brand-v2-logo">U</div>
+          <div className="brand-v2-logo">TH</div>
           <div className="brand-v2-text">
             <span className="brand-v2-name">Talento Humano</span>
             <span className="brand-v2-sub">Uniminuto Bogotá</span>

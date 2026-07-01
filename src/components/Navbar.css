@@ -27,15 +27,16 @@
 .brand-v2-logo {
   width: 42px;
   height: 42px;
-  background: var(--gold);
-  color: var(--navy);
+  background: #002f6c; /* Azul Uniminuto */
+  color: #ffffff; /* Letras blancas */
+  border: 2px solid var(--gold); /* Borde dorado */
   border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 900;
-  font-size: 1.4rem;
-  box-shadow: 0 4px 15px rgba(251, 188, 9, 0.3);
+  font-size: 1.1rem;
+  box-shadow: 0 4px 15px rgba(251, 188, 9, 0.4);
   transition: transform 0.3s;
 }
 
