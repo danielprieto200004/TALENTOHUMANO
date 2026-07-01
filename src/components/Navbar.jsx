@@ -1,10 +1,12 @@
 import { NavLink } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import { useNewsContext } from '../context/NewsContext'
 import './Navbar.css'
 import { FaPencilAlt } from 'react-icons/fa';
 
 export default function Navbar() {
   const { isEditor, logout } = useAuth()
+  const { hasPendingChanges, pendingCount, syncChanges } = useNewsContext()
 
   return (
     <header className="navbar-v2">
@@ -48,10 +50,21 @@ export default function Navbar() {
         </nav>
       </div>
 
-            {isEditor && (
-        <div className="navbar-v2-editor-status-floating">
-          <span className="status-dot"></span> Modo Editor Activo
-        </div>
+      {isEditor && (
+        hasPendingChanges ? (
+          <button 
+            className="navbar-v2-editor-status-floating active-sync" 
+            onClick={syncChanges}
+            title="Haz clic para guardar y compilar todos tus cambios en producción"
+          >
+            <span className="status-dot pulsing-gold"></span>
+            💾 Guardar {pendingCount} {pendingCount === 1 ? 'cambio' : 'cambios'}
+          </button>
+        ) : (
+          <div className="navbar-v2-editor-status-floating">
+            <span className="status-dot"></span> Modo Editor Activo
+          </div>
+        )
       )}
     </header>
   )

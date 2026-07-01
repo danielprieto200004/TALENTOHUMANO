@@ -20,8 +20,94 @@ module.exports = async function (context, req) {
       publicada, 
       redireccionUrl, 
       isHtml,
-      eliminar // Parámetro para borrado físico
+      eliminar, // Parámetro para borrado físico
+      guardarTodo, // Sobrescribir todo el lote
+      listaNoticias // Array de noticias
     } = req.body;
+
+    // Caso de GUARDADO POR LOTES (Batch Sync)
+    if (guardarTodo) {
+      if (!Array.isArray(listaNoticias)) {
+        context.res = {
+          status: 400,
+          body: { error: 'listaNoticias debe ser un array' }
+        };
+        return;
+      }
+
+      // Obtener el SHA de index.json
+      let shaIndex = null;
+      try {
+        const resIndex = await obtenerArchivoGitHub(GITHUB_TOKEN, GITHUB_OWNER, GITHUB_REPO, GITHUB_BRANCH, 'public/noticias/index.json');
+        shaIndex = resIndex.sha;
+      } catch (e) {
+        // Si no existe, shaIndex quedará como null
+      }
+
+      // Procesar cada noticia en la lista para subir archivos HTML individuales si es necesario
+      for (let i = 0; i < listaNoticias.length; i++) {
+        const noticia = listaNoticias[i];
+        
+        // Si es una noticia de tipo HTML y contiene el cuerpo HTML en esta petición,
+        // guardamos el archivo HTML en GitHub y limpiamos el cuerpo en el índice.
+        if (noticia.isHtml && noticia.cuerpo && noticia.cuerpo.trim().length > 0) {
+          const timestamp = Date.now();
+          const slug = noticia.titulo.toLowerCase()
+                             .normalize('NFD')
+                             .replace(/[\u0300-\u036f]/g, '')
+                             .replace(/[^a-z0-9]+/g, '-')
+                             .slice(0, 50);
+
+          let nombreArchivo = noticia.url ? noticia.url.replace('/noticias/', '') : `noticia-${timestamp}-${slug}.html`;
+          const rutaArchivo = `public/noticias/${nombreArchivo}`;
+          noticia.url = `/noticias/${nombreArchivo}`;
+
+          // Obtener SHA del HTML si ya existe
+          let shaHTML = null;
+          try {
+            const resHTML = await obtenerArchivoGitHub(GITHUB_TOKEN, GITHUB_OWNER, GITHUB_REPO, GITHUB_BRANCH, rutaArchivo);
+            shaHTML = resHTML.sha;
+          } catch (e) {
+            // Archivo nuevo
+          }
+
+          // Subir el archivo HTML a GitHub
+          const contenidoBase64 = Buffer.from(noticia.cuerpo, 'utf-8').toString('base64');
+          const payloadHTML = {
+            message: `📰 Guardar HTML de noticia: ${noticia.titulo}`,
+            content: contenidoBase64,
+            branch: GITHUB_BRANCH,
+            ...(shaHTML && { sha: shaHTML })
+          };
+
+          await githubPUT(GITHUB_TOKEN, GITHUB_OWNER, GITHUB_REPO, rutaArchivo, payloadHTML);
+          
+          // Limpiar el cuerpo para no guardarlo dentro de index.json
+          noticia.cuerpo = '';
+        }
+      }
+
+      // Subir el index.json actualizado
+      const indexBase64 = Buffer.from(JSON.stringify(listaNoticias, null, 2), 'utf-8').toString('base64');
+      const payloadIndex = {
+        message: `📋 Sincronizar lote de noticias en el índice (${listaNoticias.length} items)`,
+        content: indexBase64,
+        branch: GITHUB_BRANCH,
+        ...(shaIndex && { sha: shaIndex })
+      };
+
+      await githubPUT(GITHUB_TOKEN, GITHUB_OWNER, GITHUB_REPO, 'public/noticias/index.json', payloadIndex);
+
+      context.res = {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' },
+        body: {
+          ok: true,
+          mensaje: 'Lote de noticias sincronizado correctamente en GitHub.'
+        }
+      };
+      return;
+    }
 
     const timestamp = Date.now();
     const isEditing = !!id;

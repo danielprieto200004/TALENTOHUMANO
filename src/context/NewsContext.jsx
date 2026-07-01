@@ -18,7 +18,8 @@ function reducer(state, action) {
 }
 
 export function NewsProvider({ children }) {
-  const [news, dispatch] = useReducer(reducer, [])
+  const [remoteNews, setRemoteNews] = useState([])
+  const [localNews, dispatch] = useReducer(reducer, [])
   const [confirmDialog, setConfirmDialog] = useState(null)
   const [loadingProgress, setLoadingProgress] = useState(null)
 
@@ -27,12 +28,13 @@ export function NewsProvider({ children }) {
     fetch('/noticias/index.json')
       .then((res) => res.json())
       .then((data) => {
+        setRemoteNews(data)
         dispatch({ type: 'SET', news: data })
       })
       .catch((err) => console.error('Error loading news:', err))
   }, [])
 
-  const startLoadingTimer = (targetId, isDelete, targetNoticia) => {
+  const startLoadingTimer = () => {
     setLoadingProgress({ progress: 0, secondsLeft: 210, done: false })
     
     // Intervalo de la barra de carga visual (1 segundo)
@@ -62,21 +64,19 @@ export function NewsProvider({ children }) {
         const res = await fetch(`/noticias/index.json?t=${Date.now()}`)
         if (!res.ok) return
         const list = await res.json()
-        const remoteItem = list.find(n => n.id === targetId)
 
-        let propagated = false
-        if (isDelete) {
-          // Si es borrado: o ya no existe en el index.json, o está marcado como oculta (publicada: false)
-          propagated = !remoteItem || remoteItem.publicada === false
-        } else if (targetNoticia) {
-          // Si es agregar/editar: debe existir, estar publicada, y tener la información actualizada
-          propagated = remoteItem && 
-                       remoteItem.publicada === true && 
-                       remoteItem.titulo === targetNoticia.titulo && 
-                       remoteItem.resumen === targetNoticia.resumen
+        // Comparar list con localNews
+        let matches = list.length === localNews.length
+        if (matches) {
+          for (let i = 0; i < list.length; i++) {
+            if (list[i].id !== localNews[i].id || list[i].titulo !== localNews[i].titulo) {
+              matches = false
+              break
+            }
+          }
         }
 
-        if (propagated) {
+        if (matches) {
           clearInterval(visualInterval)
           clearInterval(pollInterval)
           setLoadingProgress({ progress: 100, secondsLeft: 0, done: true })
@@ -101,66 +101,57 @@ export function NewsProvider({ children }) {
     })
   }
 
-  const saveNewsApi = async (noticia) => {
-    try {
-      const response = await fetch('/api/publicar-noticia', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(noticia),
-      })
-      const data = await response.json()
-      if (data.ok) {
-        return data
-      } else {
-        showErrorDialog(`No se pudo guardar la noticia: ${data.error || 'Error interno'}`)
-        return null
-      }
-    } catch (err) {
-      console.error('Error saving news via API:', err)
-      showErrorDialog('Error de conexión con el servidor. Por favor verifica tu conexión.')
-      return null
-    }
-  }
-
-  const addNews = async (noticia) => {
-    const tempId = `temp-${Date.now()}`
-    const newNoticia = { ...noticia, id: tempId }
+  const addNews = (noticia) => {
+    const tempId = `noticia-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
+    const newNoticia = { ...noticia, id: tempId, publicada: true }
     dispatch({ type: 'ADD', news: newNoticia })
-    
-    const result = await saveNewsApi(noticia)
-    if (result && result.ok) {
-      const finalNoticia = { ...noticia, id: result.id, url: result.url }
-      dispatch({ type: 'UPDATE', news: finalNoticia })
-      startLoadingTimer(result.id, false, noticia)
-    }
   }
 
-  const updateNews = async (noticia) => {
+  const updateNews = (noticia) => {
     dispatch({ type: 'UPDATE', news: noticia })
-    const result = await saveNewsApi(noticia)
-    if (result && result.ok) {
-      startLoadingTimer(noticia.id, false, noticia)
-    }
   }
 
-  const deleteNews = async (id) => {
-    const noticia = news.find(n => n.id === id)
+  const deleteNews = (id) => {
+    const noticia = localNews.find(n => n.id === id)
     if (noticia) {
       setConfirmDialog({
         title: '¿Eliminar noticia?',
-        message: `¿Estás seguro de que deseas eliminar la noticia "${noticia.titulo}"? Esta acción la eliminará permanentemente de la intranet.`,
+        message: `¿Estás seguro de que deseas eliminar la noticia "${noticia.titulo}"? Esta acción la removerá del panel local. No olvides sincronizar para aplicar el cambio en producción.`,
         confirmText: 'Sí, eliminar',
         cancelText: 'Cancelar',
-        onConfirm: async () => {
+        onConfirm: () => {
           setConfirmDialog(null)
-          const result = await saveNewsApi({ id: id, titulo: noticia.titulo, eliminar: true })
-          if (result && result.ok) {
-            dispatch({ type: 'DELETE', id: id })
-            startLoadingTimer(id, true)
-          }
+          dispatch({ type: 'DELETE', id: id })
         },
         onCancel: () => setConfirmDialog(null)
       })
+    }
+  }
+
+  const syncChanges = async () => {
+    try {
+      setConfirmDialog(null)
+      setLoadingProgress({ progress: 0, secondsLeft: 210, done: false })
+      
+      const response = await fetch('/api/publicar-noticia', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          guardarTodo: true,
+          listaNoticias: localNews
+        }),
+      })
+      const data = await response.json()
+      if (data.ok) {
+        startLoadingTimer()
+      } else {
+        setLoadingProgress(null)
+        showErrorDialog(`No se pudieron sincronizar los cambios: ${data.error || 'Error interno'}`)
+      }
+    } catch (err) {
+      console.error('Error syncing changes via API:', err)
+      setLoadingProgress(null)
+      showErrorDialog('Error de conexión con el servidor al sincronizar.')
     }
   }
 
@@ -168,14 +159,39 @@ export function NewsProvider({ children }) {
     dispatch({ type: 'SET', news: data })
   }
 
-  const formatTime = (seconds) => {
-    const mins = Math.floor(seconds / 60)
-    const secs = seconds % 60
-    return `${mins}:${secs.toString().padStart(2, '0')} min`
+  // Calcular número de cambios pendientes comparando localNews con remoteNews
+  const getPendingCount = () => {
+    let count = 0
+    // Cambios y agregados
+    localNews.forEach(ln => {
+      const rn = remoteNews.find(n => n.id === ln.id)
+      if (!rn || JSON.stringify(ln) !== JSON.stringify(rn)) {
+        count++
+      }
+    })
+    // Eliminados
+    remoteNews.forEach(rn => {
+      if (!localNews.find(ln => ln.id === rn.id)) {
+        count++
+      }
+    })
+    return count
   }
 
+  const pendingCount = getPendingCount()
+  const hasPendingChanges = pendingCount > 0
+
   return (
-    <NewsContext.Provider value={{ news, addNews, updateNews, deleteNews, importNews }}>
+    <NewsContext.Provider value={{ 
+      news: localNews, 
+      addNews, 
+      updateNews, 
+      deleteNews, 
+      importNews,
+      hasPendingChanges,
+      pendingCount,
+      syncChanges
+    }}>
       {children}
 
       {/* Estilos dinámicos para los modales */}
@@ -292,29 +308,6 @@ export function NewsProvider({ children }) {
           margin: 15px 0;
           letter-spacing: -0.02em;
         }
-        .btn-loading-done {
-          background: #10B981;
-          color: #ffffff;
-          border: none;
-          padding: 14px 32px;
-          border-radius: 14px;
-          font-weight: 800;
-          font-size: 1rem;
-          cursor: pointer;
-          transition: all 0.2s;
-          box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
-          margin-top: 15px;
-          animation: pulseGreen 2s infinite;
-        }
-        .btn-loading-done:hover {
-          background: #059669;
-          transform: translateY(-1px);
-        }
-        @keyframes pulseGreen {
-          0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); }
-          70% { box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); }
-          100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
-        }
       `}</style>
 
       {/* Modal de Confirmación Personalizado */}
@@ -345,12 +338,12 @@ export function NewsProvider({ children }) {
         <div className="custom-dialog-overlay">
           <div className="custom-loading-box">
             <h3 className="custom-dialog-title" style={{ color: loadingProgress.done ? '#10B981' : '#ffffff' }}>
-              {loadingProgress.done ? '¡Cambios Aplicados con Éxito!' : 'Aplicando cambios en el servidor...'}
+              {loadingProgress.done ? '¡Cambios Sincronizados!' : 'Sincronizando con producción...'}
             </h3>
             <p className="custom-dialog-message" style={{ marginBottom: loadingProgress.done ? '10px' : '20px' }}>
               {loadingProgress.done 
-                ? 'El portal ha sido recompilado en Azure. Presiona el botón de abajo para refrescar el sitio y ver los cambios.'
-                : 'Estamos publicando tu contenido en GitHub y recompilando el portal en Azure Static Web Apps. Este proceso toma exactamente 3.5 minutos.'}
+                ? 'El portal ha sido recompilado en Azure. La página se refrescará automáticamente en un instante.'
+                : 'Estamos guardando todo tu lote de cambios en GitHub y recompilando el portal en Azure Static Web Apps.'}
             </p>
             
             {!loadingProgress.done && (
@@ -368,12 +361,6 @@ export function NewsProvider({ children }) {
                   Por favor, no cierres ni recargues esta pestaña
                 </span>
               </>
-            )}
-
-            {loadingProgress.done && (
-              <button className="btn-loading-done" onClick={() => window.location.reload()}>
-                Recargar Intranet
-              </button>
             )}
           </div>
         </div>
