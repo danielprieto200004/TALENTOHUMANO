@@ -1,0 +1,8 @@
+{
+  "name": "azure-functions-cms-api",
+  "version": "1.0.0",
+  "description": "API de Azure Functions para CMS de Noticias",
+  "main": "publicar-noticia/index.js",
+  "dependencies": {},
+  "devDependencies": {}
+}
