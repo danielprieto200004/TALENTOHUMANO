@@ -19,16 +19,9 @@ module.exports = async function (context, req) {
       fechaPublicacion, 
       publicada, 
       redireccionUrl, 
-      isHtml 
+      isHtml,
+      eliminar // Parámetro para borrado físico
     } = req.body;
-
-    if (!titulo) {
-      context.res = {
-        status: 400,
-        body: { error: 'El título es requerido' }
-      };
-      return;
-    }
 
     const timestamp = Date.now();
     const isEditing = !!id;
@@ -43,6 +36,48 @@ module.exports = async function (context, req) {
       listaActual = JSON.parse(Buffer.from(resIndex.content, 'base64').toString('utf-8'));
     } catch (e) {
       // Si no existe, empezará como array vacío
+    }
+
+    // Caso de ELIMINACIÓN física
+    if (eliminar) {
+      if (!id) {
+        context.res = {
+          status: 400,
+          body: { error: 'El ID es requerido para eliminar la noticia' }
+        };
+        return;
+      }
+
+      listaActual = listaActual.filter(n => n.id !== targetId);
+      
+      const indexBase64 = Buffer.from(JSON.stringify(listaActual, null, 2), 'utf-8').toString('base64');
+      const payloadIndex = {
+        message: `🗑️ Eliminar noticia física del índice: ${titulo || targetId}`,
+        content: indexBase64,
+        branch: GITHUB_BRANCH,
+        ...(shaIndex && { sha: shaIndex })
+      };
+
+      await githubPUT(GITHUB_TOKEN, GITHUB_OWNER, GITHUB_REPO, 'public/noticias/index.json', payloadIndex);
+
+      context.res = {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' },
+        body: {
+          ok: true,
+          mensaje: 'Noticia eliminada físicamente con éxito.',
+          id: targetId
+        }
+      };
+      return;
+    }
+
+    if (!titulo) {
+      context.res = {
+        status: 400,
+        body: { error: 'El título es requerido para guardar' }
+      };
+      return;
     }
 
     // 4. Determinar si se creará o actualizará un archivo HTML estático

@@ -148,15 +148,14 @@ export function NewsProvider({ children }) {
     if (noticia) {
       setConfirmDialog({
         title: '¿Eliminar noticia?',
-        message: `¿Estás seguro de que deseas eliminar la noticia "${noticia.titulo}"? Esta acción la despublicará permanentemente de la intranet.`,
+        message: `¿Estás seguro de que deseas eliminar la noticia "${noticia.titulo}"? Esta acción la eliminará permanentemente de la intranet.`,
         confirmText: 'Sí, eliminar',
         cancelText: 'Cancelar',
         onConfirm: async () => {
           setConfirmDialog(null)
-          const despublicada = { ...noticia, publicada: false }
-          dispatch({ type: 'UPDATE', news: despublicada })
-          const result = await saveNewsApi(despublicada)
+          const result = await saveNewsApi({ id: id, titulo: noticia.titulo, eliminar: true })
           if (result && result.ok) {
+            dispatch({ type: 'DELETE', id: id })
             startLoadingTimer(id, true)
           }
         },
