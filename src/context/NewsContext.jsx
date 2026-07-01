@@ -284,6 +284,7 @@ export function NewsProvider({ children }) {
           width: 0%;
           border-radius: 6px;
           box-shadow: 0 0 10px rgba(251, 192, 45, 0.5);
+          transition: width 0.4s cubic-bezier(0.1, 0.8, 0.2, 1);
         }
         .loading-countdown {
           font-size: 2.2rem;
@@ -356,7 +357,7 @@ export function NewsProvider({ children }) {
             {!loadingProgress.done && (
               <>
                 <div className="loading-countdown">
-                  {formatTime(loadingProgress.secondsLeft)}
+                  {Math.round(loadingProgress.progress)}%
                 </div>
                 <div className="loading-progress-bar-container">
                   <div 
