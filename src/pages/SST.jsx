@@ -17,6 +17,9 @@ import induccionImg           from '../assets/img/intreduccion_reinduccion.png'
 import induccionPrevImg       from '../assets/img/induccion-reinduccion-previsualizacion.png'
 import salidasCampoImg        from '../assets/img/salidas_campo.png'
 import salidasVideoImg        from '../assets/img/salidas-a-campo-video.png'
+import imgVideo1 from '../assets/img/video-uIydeLSHLWI.png'
+import imgVideo2 from '../assets/img/video-1ATLaui97DE.png'
+import imgVideo3 from '../assets/img/video-zM1L--lOi4U.png'
 
 import './SST.css'
 
@@ -196,14 +199,62 @@ function ProfBtn({ href, children }) {
   )
 }
 
+const VIDEO_THUMBNAILS = {
+  'uIydeLSHLWI': imgVideo1,
+  '1ATLaui97DE': imgVideo2,
+  'zM1L--lOi4U': imgVideo3
+};
+
+function getYoutubeId(url) {
+  if (!url) return null;
+  const m = url.match(/(?:youtu\.be\/|[?&]v=|[?&]vi=)([A-Za-z0-9_-]{11})/)
+  return m ? m[1] : null;
+}
+
 function ProfVideoEmbed({ url, title }) {
-  const embedUrl = youtubeEmbedUrl(url)
-  if (!embedUrl) return null
+  const videoId = getYoutubeId(url)
+  const thumbnail = videoId ? VIDEO_THUMBNAILS[videoId] : null
+  if (!url) return null
   return (
     <div className="prof-video-wrapper">
-      <iframe src={embedUrl} title={title}
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-        allowFullScreen className="prof-video" />
+      <div 
+        className="prof-video" 
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          backgroundImage: thumbnail ? `url(${thumbnail})` : 'none',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundColor: '#000F26'
+        }}
+      >
+        <a 
+          href={url}
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{
+            position: 'absolute',
+            bottom: '16px',
+            right: '16px',
+            backgroundColor: '#FFC72C',
+            color: '#000F26',
+            padding: '10px 20px',
+            borderRadius: '8px',
+            fontWeight: 'bold',
+            fontSize: '14px',
+            textDecoration: 'none',
+            boxShadow: '0 4px 15px rgba(0,0,0,0.3)',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px'
+          }}
+        >
+          Ver video
+        </a>
+      </div>
     </div>
   )
 }
