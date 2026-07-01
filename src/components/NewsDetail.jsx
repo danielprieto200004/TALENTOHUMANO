@@ -20,11 +20,14 @@ export default function NewsDetail({ noticia, onClose }) {
   useEffect(() => {
     if (noticia.isHtml && !noticia.cuerpo && noticia.url) {
       fetch(noticia.url)
-        .then((res) => res.text())
+        .then((res) => {
+          if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+          return res.text();
+        })
         .then((text) => setHtmlContent(text))
         .catch((err) => {
           console.error('Error fetching HTML content:', err)
-          setHtmlContent('<p style="color: red; text-align: center; padding: 20px;">Error al cargar el contenido de la noticia.</p>')
+          setHtmlContent('<p style="color: red; text-align: center; padding: 20px;">Error al cargar el contenido de la noticia. Es posible que el archivo aún se esté publicando en el servidor, intenta de nuevo en unos minutos.</p>')
         })
     } else {
       setHtmlContent(noticia.cuerpo || '')
