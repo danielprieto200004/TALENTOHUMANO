@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import Cropper from 'react-easy-crop'
 import { CATEGORIAS } from '../data/defaultNews'
+import ConfirmModal from './ConfirmModal'
 import './NewsEditor.css'
 
 // Image cropping utilities
@@ -65,6 +66,7 @@ export default function NewsEditor({ noticia, onSave, onClose }) {
   const [zoom, setZoom] = useState(1)
   const [croppedAreaPixels, setCroppedAreaPixels] = useState(null)
   const [imgSrc, setImgSrc] = useState(null)
+  const [confirmOpen, setConfirmOpen] = useState(false)
   const imgInputRef = useRef()
 
   useEffect(() => {
@@ -212,8 +214,16 @@ export default function NewsEditor({ noticia, onSave, onClose }) {
     if (imgInputRef.current) imgInputRef.current.value = ''
   }
 
-  function handleSubmit(e) {
+  function handleSaveClick(e) {
     e.preventDefault()
+    if (!form.titulo || !form.resumen) {
+      alert("Por favor, completa el título y resumen antes de continuar.")
+      return
+    }
+    setConfirmOpen(true)
+  }
+
+  function executeSave() {
     const [y, m, d] = form.fechaPublicacion.split('-')
     const finalDate = new Date(y, m - 1, d, 12, 0, 0).toISOString()
 
@@ -221,6 +231,7 @@ export default function NewsEditor({ noticia, onSave, onClose }) {
       ...form,
       fechaPublicacion: finalDate,
     })
+    setConfirmOpen(false)
   }
 
   const isPattern = form.imagen?.startsWith('pattern:')
@@ -233,7 +244,7 @@ export default function NewsEditor({ noticia, onSave, onClose }) {
           <button className="editor-close" onClick={onClose}>✕</button>
         </div>
 
-        <form className="editor-form" onSubmit={handleSubmit}>
+        <form className="editor-form" onSubmit={(e) => e.preventDefault()}>
           <div className="field">
             <label>Tipo de Contenido</label>
             <div style={{ display: 'flex', gap: '20px', marginTop: '6px' }}>
@@ -457,12 +468,21 @@ export default function NewsEditor({ noticia, onSave, onClose }) {
             <button type="button" className="btn-cancel" onClick={onClose}>
               Cancelar
             </button>
-            <button type="submit" className="btn-save" disabled={loadingImg}>
+            <button type="button" className="btn-save" disabled={loadingImg} onClick={handleSaveClick}>
               {noticia ? 'Guardar cambios' : 'Publicar noticia'}
             </button>
           </div>
         </form>
       </div>
+
+      {confirmOpen && console.log("ConfirmModal should be open now!")}
+      <ConfirmModal
+        isOpen={confirmOpen}
+        title="¿Aplicar cambios?"
+        message="Estás a punto de guardar estos cambios en la noticia. ¿Deseas continuar?"
+        onConfirm={executeSave}
+        onCancel={() => setConfirmOpen(false)}
+      />
     </div>
   )
 }

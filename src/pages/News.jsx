@@ -6,6 +6,7 @@ import NewsCard from '../components/NewsCard'
 import NewsEditor from '../components/NewsEditor'
 import AdminPanel from '../components/AdminPanel'
 import NewsDetail from '../components/NewsDetail'
+import ConfirmModal from '../components/ConfirmModal'
 import './News.css'
 
 export default function News() {
@@ -15,6 +16,8 @@ export default function News() {
   const [editando, setEditando] = useState(null)
   const [editorOpen, setEditorOpen] = useState(false)
   const [selectedNews, setSelectedNews] = useState(null)
+  const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false)
+  const [newsToDelete, setNewsToDelete] = useState(null)
 
   useEffect(() => {
     window.scrollTo(0, 0)
@@ -53,7 +56,16 @@ export default function News() {
   }
 
   function handleDelete(id) {
-    deleteNews(id)
+    setNewsToDelete(id)
+    setDeleteConfirmOpen(true)
+  }
+
+  function executeDelete() {
+    if (newsToDelete) {
+      deleteNews(newsToDelete)
+      setDeleteConfirmOpen(false)
+      setNewsToDelete(null)
+    }
   }
 
   return (
@@ -124,6 +136,15 @@ export default function News() {
           onClose={() => setSelectedNews(null)}
         />
       )}
+
+      <ConfirmModal
+        isOpen={deleteConfirmOpen}
+        title="¿Eliminar noticia?"
+        message="Esta acción no se puede deshacer. ¿Estás seguro de que deseas eliminar esta noticia?"
+        onConfirm={executeDelete}
+        onCancel={() => { setDeleteConfirmOpen(false); setNewsToDelete(null); }}
+        confirmText="Eliminar"
+      />
     </main>
   )
 }
