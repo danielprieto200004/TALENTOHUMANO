@@ -146,14 +146,7 @@ export default function Home() {
                   <span className="detail-label">Sede Bogotá</span>
                   <span className="detail-value">Calle 81B #72B-70, Bogotá D.C.</span>
                 </div>
-                <div className="detail-item">
-                  <span className="detail-label">Línea de Atención</span>
-                  <span className="detail-value">+57 601 291 6520 Ext. 6100</span>
-                </div>
-                <div className="detail-item">
-                  <span className="detail-label">Correo Oficial</span>
-                  <span className="detail-value">talentohumano.bogota@uniminuto.edu</span>
-                </div>
+
               </div>
             </div>
             <div className="contact-v2-aside">
