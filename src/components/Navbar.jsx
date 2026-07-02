@@ -55,7 +55,7 @@ export default function Navbar() {
           <button 
             className="navbar-v2-editor-status-floating active-sync" 
             onClick={syncChanges}
-            title="Haz clic para guardar y compilar todos tus cambios en producción"
+            title="⚠️ Atención: Para no saturar la aplicación, por favor sube tus cambios máximo cada 10 minutos. Haz clic para guardar."
           >
             <span className="status-dot pulsing-gold"></span>
             💾 Guardar {pendingCount} {pendingCount === 1 ? 'cambio' : 'cambios'}

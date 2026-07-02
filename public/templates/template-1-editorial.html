@@ -3,48 +3,61 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
-  <!-- 
+
+  <!--
     ==================================================================================
-    INSTRUCCIONES PARA LA IA / GENERADOR DE CONTENIDO:
-    Este archivo está estructurado de manera que el analizador automático de la intranet
-    de Talento Humano extraiga los metadatos de forma automática.
-    
-    Por favor, cuando edites o generes contenido para esta plantilla, mantén los siguientes campos:
-    
+    INSTRUCCIONES PARA LA IA / GENERADOR DE CONTENIDO  —  PLANTILLA 1 "EDITORIAL" (CLARA)
+    ==================================================================================
+    Este archivo está estructurado para que el analizador automático de la intranet de
+    Talento Humano extraiga los metadatos de forma automática. Es un HTML AUTÓNOMO que se
+    embebe en un <iframe> y reporta su altura al contenedor padre (ver <script> final).
+    NO conviertas este archivo a otro formato ni elimines el script de altura.
+
+    ── CAMPOS OBLIGATORIOS QUE DEBES MANTENER ─────────────────────────────────────────
     1. TÍTULO DE LA NOTICIA:
-       - Debe estar dentro de la etiqueta <title> (abajo).
-       - Y opcionalmente dentro del elemento <h1 class="editorial-title hero-title">.
-       
+       - Dentro de <title> (abajo) y dentro de <h1 class="editorial-title hero-title">.
     2. CATEGORÍA:
-       - Debe ir en el meta tag: <meta name="category" content="CategoríaAquí">
-       - Categorías válidas en el sistema: "General", "Salud y Seguridad", "Bienestar".
-       
+       - En <meta name="category" content="..."> y en <span class="editorial-badge badge">.
+       - Categorías válidas: "General", "Salud y Seguridad", "Bienestar".
     3. RESUMEN / EXCERPT:
-       - Debe ir en el meta tag: <meta name="description" content="Resumen corto aquí">
-       - Este texto es el que aparecerá en la tarjeta exterior de la sección de noticias.
+       - En <meta name="description" content="..."> y en <p class="lead-paragraph hero-excerpt">.
+       - Es el texto que aparece en la tarjeta exterior de la sección de noticias.
+
+    ── SISTEMA DINÁMICO (atributos que puedes reutilizar al crear/editar contenido) ────
+    • data-reveal            → el elemento aparece con una animación en cascada al entrar en vista.
+                               (Si el iframe se muestra a altura completa, todo revela con cascada al cargar.)
+    • data-reveal-delay="N"  → retardo extra en ms para escalonar el revelado.
+    • data-count="94"        → convierte el número en un CONTADOR animado que sube desde 0.
+        data-prefix="+"      → texto antes del número (ej. "+").
+        data-suffix="%"      → texto después del número (ej. "%", "k", "h").
+        data-decimals="1"    → nº de decimales (ej. "1.2k" usa data-count="1.2" data-decimals="1").
+    Estos atributos los lee el <script> del final; añádelos y funcionarán solos.
+    Para AÑADIR más bloques copia cualquier sección de <main> y ajústala. Para crear una
+    NUEVA plantilla, replica esta cabecera de comentarios con los mismos campos.
     ==================================================================================
   -->
-  
+
   <title>Avances en el Desarrollo Profesional y Académico</title>
   <meta name="category" content="General" />
   <meta name="description" content="Informe oficial sobre los programas de capacitación continua, alianzas de desarrollo y las estadísticas de participación del equipo institucional en este semestre." />
-  
+
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Lora:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,600&display=swap" rel="stylesheet" />
 
   <style>
     :root {
-      --color-primary:    #000F26;   /* Navy Principal */
-      --color-primary-lt: #F0F4FA;   /* Azul muy claro */
-      --color-accent:     #0C82B2;   /* Azul de acento */
-      --color-accent-lt:  #E3F2FD;   /* Fondo acento */
-      --color-dark:       #1E293B;   /* Gris oscuro */
-      --color-mid:        #64748B;   /* Gris medio */
-      --color-bg:         #FAF9F6;   /* Crema suave */
-      --color-surface:    #E2E8F0;   /* Gris bordes */
+      --color-primary:    #000F26;
+      --color-primary-lt: #F0F4FA;
+      --color-accent:     #0C82B2;
+      --color-accent-2:   #38BDF8;
+      --color-accent-lt:  #E3F2FD;
+      --color-dark:       #1E293B;
+      --color-mid:        #64748B;
+      --color-bg:         #FAF9F6;
+      --color-surface:    #E2E8F0;
       --color-white:      #FFFFFF;
+      --ease:             cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -56,60 +69,85 @@
       color: var(--color-dark);
       line-height: 1.7;
       -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
     }
 
-    /* ─── ANIMACIONES PREMIUM ────────────────────────────────────── */
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(32px); }
-      to   { opacity: 1; transform: translateY(0); }
+    /* ─── SISTEMA DE REVELADO EN CASCADA ─────────────────────────── */
+    [data-reveal] {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.9s var(--ease), transform 0.9s var(--ease);
+      will-change: opacity, transform;
     }
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to   { opacity: 1; }
+    [data-reveal].in { opacity: 1; transform: none; }
+
+    /* ─── ANIMACIONES AMBIENTALES ─────────────────────────────────── */
+    @keyframes floatBlob {
+      0%, 100% { transform: translate(0,0) scale(1); }
+      50%      { transform: translate(24px,-28px) scale(1.08); }
+    }
+    @keyframes shimmer {
+      0%   { background-position: -200% center; }
+      100% { background-position: 200% center; }
+    }
+    @keyframes kenburns {
+      0%   { transform: scale(1); }
+      100% { transform: scale(1.06); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; }
+      [data-reveal] { opacity: 1 !important; transform: none !important; transition: none !important; }
     }
 
-    .anim-1 { animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) both; }
-    .anim-2 { animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.12s both; }
-    .anim-3 { animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.24s both; }
-    .anim-4 { animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.36s both; }
-
-    .wrapper {
-      width: 100%;
-      max-width: 840px;
-      margin: 0 auto;
-      padding: 0 24px;
-    }
+    .wrapper { width: 100%; max-width: 840px; margin: 0 auto; padding: 0 24px; }
 
     /* ─── HEADER EDITORIAL ───────────────────────────────────────── */
     .header-editorial {
-      padding: 80px 0 64px 0;
+      padding: 88px 0 64px;
       text-align: center;
-      background: linear-gradient(180deg, rgba(240, 244, 250, 0.8) 0%, rgba(250, 249, 246, 0) 100%), var(--color-white);
+      background: linear-gradient(180deg, rgba(240,244,250,0.9) 0%, rgba(250,249,246,0) 100%), var(--color-white);
       border-bottom: 1px solid var(--color-surface);
       position: relative;
       overflow: hidden;
     }
-
-    /* Fondo abstracto para el header */
-    .header-editorial::before {
-      content: '';
+    .header-editorial .blob {
       position: absolute;
-      top: -50%; left: -10%;
-      width: 120%; height: 200%;
-      background: radial-gradient(circle, rgba(12, 130, 178, 0.05) 0%, transparent 60%);
+      border-radius: 50%;
       pointer-events: none;
-      z-index: 1;
+      z-index: 0;
+      filter: blur(8px);
     }
-
+    .header-editorial .blob-1 {
+      top: -140px; left: 8%;
+      width: 340px; height: 340px;
+      background: radial-gradient(circle, rgba(12,130,178,0.12) 0%, transparent 68%);
+      animation: floatBlob 13s ease-in-out infinite;
+    }
+    .header-editorial .blob-2 {
+      bottom: -160px; right: 6%;
+      width: 300px; height: 300px;
+      background: radial-gradient(circle, rgba(56,189,248,0.12) 0%, transparent 68%);
+      animation: floatBlob 16s ease-in-out infinite reverse;
+    }
     .header-editorial::after {
       content: '';
       position: absolute;
       bottom: 0; left: 50%;
       transform: translateX(-50%);
-      width: 80px;
-      height: 4px;
-      background: linear-gradient(90deg, var(--color-accent), #38bdf8);
+      width: 90px; height: 4px;
+      background: linear-gradient(90deg, var(--color-accent), var(--color-accent-2));
       border-radius: 2px 2px 0 0;
+      z-index: 2;
+    }
+    .header-editorial .wrapper { position: relative; z-index: 2; }
+
+    .editorial-kicker {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--color-mid);
+      margin-bottom: 18px;
     }
 
     .editorial-badge {
@@ -119,55 +157,75 @@
       text-transform: uppercase;
       letter-spacing: 0.25em;
       color: var(--color-accent);
-      margin-bottom: 20px;
-      padding: 6px 16px;
+      margin-bottom: 22px;
+      padding: 7px 18px;
       background: var(--color-accent-lt);
       border-radius: 999px;
-      border: 1px solid rgba(12, 130, 178, 0.15);
-      position: relative;
-      z-index: 2;
-      box-shadow: 0 4px 12px rgba(12, 130, 178, 0.05);
+      border: 1px solid rgba(12,130,178,0.16);
+      box-shadow: 0 4px 14px rgba(12,130,178,0.07);
     }
 
     .editorial-title {
       font-family: 'Lora', Georgia, serif;
-      font-size: clamp(34px, 5vw, 52px);
+      font-size: clamp(34px, 5vw, 54px);
       font-weight: 700;
       color: var(--color-primary);
-      line-height: 1.15;
-      margin-bottom: 20px;
+      line-height: 1.14;
+      margin-bottom: 24px;
       letter-spacing: -0.02em;
-      position: relative;
-      z-index: 2;
+      text-wrap: balance;
     }
 
     .editorial-meta {
+      display: inline-flex;
+      align-items: center;
+      gap: 14px;
       font-size: 13px;
       color: var(--color-mid);
       font-weight: 500;
-      letter-spacing: 0.05em;
-      position: relative;
-      z-index: 2;
+      letter-spacing: 0.03em;
     }
-
-    /* ─── CONTENIDO EDITORIAL ────────────────────────────────────── */
-    .editorial-body {
-      padding: 56px 0;
+    .editorial-meta .avatar {
+      width: 34px; height: 34px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+      color: #fff;
+      display: grid; place-items: center;
+      font-weight: 800; font-size: 13px;
+      letter-spacing: 0;
     }
+    .editorial-meta .dot { width: 3px; height: 3px; border-radius: 50%; background: var(--color-surface); }
 
+    /* ─── CONTENIDO ──────────────────────────────────────────────── */
+    .editorial-body { padding: 56px 0 72px; }
+
+    figure.content-figure { margin: 36px 0; }
     .content-image {
       width: 100%;
       height: auto;
-      border-radius: 16px;
-      margin: 32px 0;
-      box-shadow: 0 12px 30px rgba(0,0,0,0.1);
+      border-radius: 18px;
+      box-shadow: 0 20px 44px rgba(0,15,38,0.14);
       object-fit: cover;
-      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease;
+      display: block;
     }
-
-    .content-image:hover {
-      transform: translateY(-4px) scale(1.015);
-      box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+    .img-frame {
+      border-radius: 18px;
+      overflow: hidden;
+      position: relative;
+    }
+    .img-frame img { animation: kenburns 14s ease-in-out infinite alternate; }
+    .img-frame::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(180deg, transparent 60%, rgba(0,15,38,0.12));
+      pointer-events: none;
+    }
+    figure.content-figure figcaption {
+      margin-top: 12px;
+      font-size: 12.5px;
+      color: var(--color-mid);
+      text-align: center;
+      font-style: italic;
     }
 
     .lead-paragraph {
@@ -176,194 +234,327 @@
       line-height: 1.7;
       color: var(--color-primary);
       margin-bottom: 40px;
-      position: relative;
     }
-
     .lead-paragraph::first-letter {
       font-family: 'Inter', sans-serif;
-      font-size: 76px;
+      font-size: 78px;
       font-weight: 900;
       float: left;
       line-height: 56px;
-      padding-right: 14px;
+      padding: 4px 14px 0 0;
       background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-
-    .content-image {
-      width: 100%;
-      height: auto;
-      border-radius: 16px;
-      margin: 32px 0;
-      box-shadow: 0 20px 40px rgba(0, 15, 38, 0.12);
-      object-fit: cover;
-      transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    .content-image:hover {
-      transform: scale(1.02);
-      box-shadow: 0 28px 50px rgba(0, 15, 38, 0.2);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
     }
 
     .p-text {
       font-family: 'Lora', Georgia, serif;
       font-size: 18px;
-      line-height: 1.8;
+      line-height: 1.85;
       color: #334155;
       margin-bottom: 28px;
     }
 
     .sub-heading {
       font-family: 'Inter', sans-serif;
-      font-size: 24px;
+      font-size: 25px;
       font-weight: 800;
       color: var(--color-primary);
-      margin-top: 48px;
-      margin-bottom: 16px;
+      margin: 52px 0 16px;
       letter-spacing: -0.02em;
+      position: relative;
+      padding-left: 18px;
+    }
+    .sub-heading::before {
+      content: '';
+      position: absolute; left: 0; top: 8px; bottom: 8px;
+      width: 5px; border-radius: 3px;
+      background: linear-gradient(180deg, var(--color-accent), var(--color-accent-2));
     }
 
     /* ─── STAT CARDS ────────────────────────────────────────────── */
     .stats-row {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
       gap: 20px;
-      margin: 40px 0;
+      margin: 44px 0;
     }
-
     .stat-box {
       background: var(--color-white);
-      border-radius: 16px;
-      padding: 24px;
+      border-radius: 18px;
+      padding: 28px 24px;
       border: 1px solid var(--color-surface);
       text-align: center;
-      transition: transform 0.25s ease, box-shadow 0.25s ease;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.3s var(--ease), box-shadow 0.3s var(--ease), border-color 0.3s ease;
     }
-
+    .stat-box::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      background: linear-gradient(90deg, var(--color-accent), var(--color-accent-2));
+      transform: scaleX(0); transform-origin: left;
+      transition: transform 0.5s var(--ease);
+    }
     .stat-box:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 12px 24px rgba(0, 15, 38, 0.08);
+      transform: translateY(-6px);
+      box-shadow: 0 18px 34px rgba(0,15,38,0.1);
+      border-color: rgba(12,130,178,0.3);
     }
-
+    .stat-box:hover::before { transform: scaleX(1); }
     .stat-num {
-      font-size: 40px;
+      font-size: 44px;
       font-weight: 900;
       color: var(--color-accent);
       line-height: 1;
-      margin-bottom: 8px;
+      margin-bottom: 10px;
+      font-variant-numeric: tabular-nums;
     }
-
     .stat-lbl {
-      font-size: 12px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: var(--color-mid);
+      font-size: 12px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.1em; color: var(--color-mid);
     }
 
     /* ─── PULLQUOTE ──────────────────────────────────────────────── */
     .editorial-quote {
-      margin: 48px 0;
-      padding: 24px 32px;
+      position: relative;
+      margin: 52px 0;
+      padding: 32px 32px 32px 40px;
       border-left: 5px solid var(--color-accent);
       background: var(--color-primary-lt);
-      border-radius: 0 16px 16px 0;
+      border-radius: 0 18px 18px 0;
+      overflow: hidden;
     }
-
+    .editorial-quote::before {
+      content: '\201C';
+      position: absolute;
+      top: -18px; right: 16px;
+      font-family: 'Lora', serif;
+      font-size: 140px;
+      line-height: 1;
+      color: rgba(12,130,178,0.12);
+      pointer-events: none;
+    }
     .editorial-quote p {
       font-family: 'Lora', Georgia, serif;
-      font-size: 20px;
-      font-style: italic;
-      color: var(--color-primary);
-      line-height: 1.6;
+      font-size: 21px; font-style: italic;
+      color: var(--color-primary); line-height: 1.6;
+      position: relative; z-index: 1;
+    }
+    .editorial-quote cite {
+      display: block; margin-top: 14px;
+      font-size: 12px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.1em; color: var(--color-accent); font-style: normal;
     }
 
-    .editorial-quote cite {
-      display: block;
-      font-size: 12px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: var(--color-accent);
-      margin-top: 12px;
-      font-style: normal;
+    /* ─── KEY TAKEAWAYS ──────────────────────────────────────────── */
+    .takeaways {
+      list-style: none;
+      display: grid; gap: 14px;
+      margin: 40px 0;
     }
+    .takeaways li {
+      display: flex; gap: 14px; align-items: flex-start;
+      background: var(--color-white);
+      border: 1px solid var(--color-surface);
+      border-radius: 14px;
+      padding: 16px 20px;
+      font-size: 16px; color: #334155;
+      transition: transform 0.25s var(--ease), border-color 0.25s ease;
+    }
+    .takeaways li:hover { transform: translateX(6px); border-color: rgba(12,130,178,0.35); }
+    .takeaways .check {
+      flex: none; width: 26px; height: 26px; border-radius: 50%;
+      background: var(--color-accent-lt); color: var(--color-accent);
+      display: grid; place-items: center; font-weight: 900; font-size: 14px;
+    }
+
+    /* ─── GALERÍA ────────────────────────────────────────────────── */
+    .gallery {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 36px 0;
+    }
+    .gallery .img-frame { border-radius: 16px; }
+    .gallery img { height: 200px; width: 100%; object-fit: cover; display: block; animation: none; transition: transform 0.6s var(--ease); }
+    .gallery .img-frame:hover img { transform: scale(1.06); }
+
+    /* ─── TAGS ───────────────────────────────────────────────────── */
+    .tag-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 48px; padding-top: 28px; border-top: 1px solid var(--color-surface); }
+    .tag {
+      font-size: 12px; font-weight: 600; color: var(--color-mid);
+      padding: 6px 14px; border-radius: 999px; background: var(--color-white);
+      border: 1px solid var(--color-surface);
+      transition: all 0.25s ease;
+    }
+    .tag:hover { color: var(--color-accent); border-color: var(--color-accent); background: var(--color-accent-lt); }
 
     @media (max-width: 600px) {
-      .header-editorial { padding: 48px 0 32px 0; }
-      .editorial-title { font-size: 28px; }
+      .header-editorial { padding: 56px 0 40px; }
+      .editorial-title { font-size: 30px; }
       .lead-paragraph { font-size: 18px; }
       .p-text { font-size: 16px; }
+      .gallery { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
 
   <header class="header-editorial">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
     <div class="wrapper">
-      <span class="editorial-badge badge anim-1">General</span>
-      <h1 class="editorial-title hero-title anim-2">Avances en el Desarrollo Profesional y Académico</h1>
-      <div class="editorial-meta anim-3">Por Talento Humano • 1 de Julio de 2026</div>
+      <div class="editorial-kicker" data-reveal>Talento Humano · Informe Institucional</div>
+      <span class="editorial-badge badge" data-reveal data-reveal-delay="80">General</span>
+      <h1 class="editorial-title hero-title" data-reveal data-reveal-delay="160">Avances en el Desarrollo Profesional y Académico</h1>
+      <div class="editorial-meta" data-reveal data-reveal-delay="240">
+        <span class="avatar">TH</span>
+        <span>Por Talento Humano</span>
+        <span class="dot"></span>
+        <span>1 de Julio de 2026</span>
+        <span class="dot"></span>
+        <span>4 min de lectura</span>
+      </div>
     </div>
   </header>
 
   <main class="editorial-body">
     <div class="wrapper">
-      <p class="lead-paragraph hero-excerpt anim-4">
+      <p class="lead-paragraph hero-excerpt" data-reveal>
         Con el compromiso de brindar nuevas oportunidades de crecimiento para nuestros colaboradores, presentamos los resultados del último periodo de capacitación y los planes estratégicos de desarrollo para este semestre.
       </p>
 
-      <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" alt="Equipo de desarrollo" class="content-image anim-4" />
+      <figure class="content-figure" data-reveal>
+        <div class="img-frame">
+          <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" alt="Equipo de desarrollo colaborando" class="content-image" />
+        </div>
+        <figcaption>Sesiones de trabajo colaborativo del equipo institucional durante el último trimestre.</figcaption>
+      </figure>
 
-      <p class="p-text">
+      <p class="p-text" data-reveal>
         El fortalecimiento de capacidades técnicas y blandas es un pilar indispensable dentro de nuestra institución. Gracias a las nuevas alianzas y metodologías aplicadas, hemos registrado un incremento importante en la participación de talleres interactivos y cursos virtuales autodirigidos.
       </p>
 
-      <div class="stats-row">
+      <div class="stats-row" data-reveal>
         <div class="stat-box">
-          <div class="stat-num">94%</div>
+          <div class="stat-num" data-count="94" data-suffix="%">0</div>
           <div class="stat-lbl">Satisfacción</div>
         </div>
         <div class="stat-box">
-          <div class="stat-num">+1.2k</div>
+          <div class="stat-num" data-count="1.2" data-decimals="1" data-prefix="+" data-suffix="k">0</div>
           <div class="stat-lbl">Horas cursadas</div>
         </div>
         <div class="stat-box">
-          <div class="stat-num">35</div>
+          <div class="stat-num" data-count="35" data-suffix="">0</div>
           <div class="stat-lbl">Nuevos cursos</div>
         </div>
       </div>
 
-      <h2 class="sub-heading">Enfoque de aprendizaje continuo</h2>
-      <p class="p-text">
-        Diseñamos trayectorias de aprendizaje flexibles que se adaptan a los diferentes perfiles laborales y horarios de trabajo de la institución, impulsando así el crecimiento orgánico de nuestros líderes y equipos operativos de manera incluosiva.
+      <h2 class="sub-heading" data-reveal>Enfoque de aprendizaje continuo</h2>
+      <p class="p-text" data-reveal>
+        Diseñamos trayectorias de aprendizaje flexibles que se adaptan a los diferentes perfiles laborales y horarios de trabajo de la institución, impulsando así el crecimiento orgánico de nuestros líderes y equipos operativos de manera inclusiva.
       </p>
 
-      <div class="editorial-quote">
-        <p>"La educación y el desarrollo de habilidades dentro de nuestra planta son los mejores catalizadores para alcanzar la excelencia en el servicio institucional."</p>
+      <ul class="takeaways" data-reveal>
+        <li><span class="check">✓</span> Rutas de aprendizaje personalizadas por rol y área operativa.</li>
+        <li><span class="check">✓</span> Certificaciones internas con validez para el plan de carrera.</li>
+        <li><span class="check">✓</span> Mentorías cruzadas entre líderes y equipos emergentes.</li>
+      </ul>
+
+      <div class="editorial-quote" data-reveal>
+        <p>La educación y el desarrollo de habilidades dentro de nuestra planta son los mejores catalizadores para alcanzar la excelencia en el servicio institucional.</p>
         <cite>Dirección de Talento Humano</cite>
       </div>
 
-      <p class="p-text">
+      <h2 class="sub-heading" data-reveal>Momentos del programa</h2>
+      <div class="gallery" data-reveal>
+        <div class="img-frame">
+          <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Taller presencial" />
+        </div>
+        <div class="img-frame">
+          <img src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Mentoría uno a uno" />
+        </div>
+      </div>
+
+      <p class="p-text" data-reveal>
         Esperamos continuar sumando esfuerzos para que cada colaborador encuentre espacios ideales para el desarrollo integral de sus proyectos profesionales.
       </p>
+
+      <div class="tag-row" data-reveal>
+        <span class="tag">#Capacitación</span>
+        <span class="tag">#DesarrolloProfesional</span>
+        <span class="tag">#TalentoHumano</span>
+        <span class="tag">#AprendizajeContinuo</span>
+      </div>
     </div>
   </main>
 
   <script>
+    /* ── MOTOR DINÁMICO (compartido). Lee data-reveal / data-count. ── */
+    (function () {
+      var reveals = document.querySelectorAll('[data-reveal]');
+
+      function applyDelay(el) {
+        var d = parseInt(el.getAttribute('data-reveal-delay') || '0', 10);
+        if (d) el.style.transitionDelay = d + 'ms';
+      }
+      reveals.forEach(applyDelay);
+
+      function runCounters(scope) {
+        var nums = scope.querySelectorAll('[data-count]');
+        nums.forEach(function (el) {
+          if (el.dataset.done) return;
+          el.dataset.done = '1';
+          var target = parseFloat(el.getAttribute('data-count')) || 0;
+          var dec = parseInt(el.getAttribute('data-decimals') || '0', 10);
+          var pre = el.getAttribute('data-prefix') || '';
+          var suf = el.getAttribute('data-suffix') || '';
+          var dur = 1500, start = performance.now();
+          (function tick(now) {
+            var p = Math.min((now - start) / dur, 1);
+            var eased = 1 - Math.pow(1 - p, 3);
+            el.textContent = pre + (target * eased).toFixed(dec) + suf;
+            if (p < 1) requestAnimationFrame(tick);
+          })(start);
+        });
+      }
+
+      function reveal(el) {
+        el.classList.add('in');
+        runCounters(el);
+      }
+
+      if ('IntersectionObserver' in window) {
+        var io = new IntersectionObserver(function (entries) {
+          entries.forEach(function (e) {
+            if (e.isIntersecting) { reveal(e.target); io.unobserve(e.target); }
+          });
+        }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+        reveals.forEach(function (el) { io.observe(el); });
+      } else {
+        reveals.forEach(reveal);
+      }
+
+      /* Parallax suave de los blobs del header según el mouse */
+      var header = document.querySelector('.header-editorial');
+      if (header && window.matchMedia('(pointer:fine)').matches) {
+        var blobs = header.querySelectorAll('.blob');
+        header.addEventListener('mousemove', function (ev) {
+          var r = header.getBoundingClientRect();
+          var x = (ev.clientX - r.left) / r.width - 0.5;
+          var y = (ev.clientY - r.top) / r.height - 0.5;
+          blobs.forEach(function (b, i) {
+            var f = (i + 1) * 18;
+            b.style.transform = 'translate(' + (x * f) + 'px,' + (y * f) + 'px)';
+          });
+        });
+      }
+    })();
+
+    /* ── Reporte de altura al iframe padre (NO ELIMINAR) ── */
     function reportHeight() {
-      window.parent.postMessage({
-        type: 'symbiotic-iframe-height',
-        height: document.body.scrollHeight
-      }, '*');
+      window.parent.postMessage({ type: 'symbiotic-iframe-height', height: document.body.scrollHeight }, '*');
     }
     window.addEventListener('load', reportHeight);
     window.addEventListener('resize', reportHeight);
-    if (window.ResizeObserver) {
-      new ResizeObserver(reportHeight).observe(document.body);
-    }
+    if (window.ResizeObserver) { new ResizeObserver(reportHeight).observe(document.body); }
   </script>
 </body>
 </html>

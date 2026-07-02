@@ -128,31 +128,40 @@ export function NewsProvider({ children }) {
     }
   }
 
-  const syncChanges = async () => {
-    try {
-      setConfirmDialog(null)
-      setLoadingProgress({ progress: 0, secondsLeft: 210, done: false })
-      
-      const response = await fetch('/api/publicar-noticia', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          guardarTodo: true,
-          listaNoticias: localNews
-        }),
-      })
-      const data = await response.json()
-      if (data.ok) {
-        startLoadingTimer()
-      } else {
-        setLoadingProgress(null)
-        showErrorDialog(`No se pudieron sincronizar los cambios: ${data.error || 'Error interno'}`)
-      }
-    } catch (err) {
-      console.error('Error syncing changes via API:', err)
-      setLoadingProgress(null)
-      showErrorDialog('Error de conexión con el servidor al sincronizar.')
-    }
+  const syncChanges = () => {
+    setConfirmDialog({
+      title: '⚠️ Advertencia de Subida',
+      message: 'Para evitar saturar la aplicación y no ser bloqueado por el servidor, por favor asegúrate de subir cambios como máximo CADA 10 MINUTOS. ¿Deseas confirmar la subida ahora?',
+      confirmText: 'Confirmar',
+      cancelText: 'Cancelar',
+      onConfirm: async () => {
+        setConfirmDialog(null)
+        setLoadingProgress({ progress: 0, secondsLeft: 210, done: false })
+        
+        try {
+          const response = await fetch('/api/publicar-noticia', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              guardarTodo: true,
+              listaNoticias: localNews
+            }),
+          })
+          const data = await response.json()
+          if (data.ok) {
+            startLoadingTimer()
+          } else {
+            setLoadingProgress(null)
+            showErrorDialog(`No se pudieron sincronizar los cambios: ${data.error || 'Error interno'}`)
+          }
+        } catch (err) {
+          console.error('Error syncing changes via API:', err)
+          setLoadingProgress(null)
+          showErrorDialog('Error de conexión con el servidor al sincronizar.')
+        }
+      },
+      onCancel: () => setConfirmDialog(null)
+    })
   }
 
   const importNews = async (data) => {
